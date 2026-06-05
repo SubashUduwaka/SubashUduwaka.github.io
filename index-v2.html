@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="loading">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://avatars.githubusercontent.com data:; connect-src 'self' https://cdn.jsdelivr.net; media-src 'self' data:; frame-src 'none'; object-src 'none';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://avatars.githubusercontent.com data:; connect-src 'self' https://cdn.jsdelivr.net https://api.rss2json.com https://generativelanguage.googleapis.com; media-src 'self' data:; frame-src 'none'; object-src 'none';">
     <title>Subash Uduwaka | Cybersecurity Portfolio</title>
-    <meta name="description" content="Subash Dananjaya Uduwaka — Cloud-Focused Cybersecurity Student, Ethical Hacker, and Security Researcher at Edith Cowan University.">
+    <meta name="description" content="Subash Dananjaya Uduwaka — Cybersecurity Student, Ethical Hacker, and Security Researcher at Edith Cowan University.">
     <meta name="author" content="Subash Dananjaya Uduwaka">
     <meta property="og:title" content="Subash Uduwaka | Cybersecurity Portfolio">
-    <meta property="og:description" content="Cloud-focused cybersecurity student securing multi-cloud infrastructures.">
+    <meta property="og:description" content="Cybersecurity student specializing in ethical hacking, threat hunting, and security research.">
     <meta property="og:image" content="https://avatars.githubusercontent.com/u/66825318?v=4">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
     <link rel="manifest" href="manifest.json">
@@ -46,7 +46,9 @@
             --mono: 'JetBrains Mono', monospace;
             --sans: 'Inter', -apple-system, sans-serif;
             --terminal-bg: #0a0e14;
+            --terminal-bg-glass: rgba(10, 14, 20, 0.45);
             --terminal-bar-bg: #0d1218;
+            --terminal-bar-bg-glass: rgba(13, 18, 24, 0.55);
             --terminal-text: #e2e8f0;
             --terminal-border: var(--border);
         }
@@ -77,12 +79,15 @@
             --text-muted: #8c959f;
             --glass-bg: rgba(244, 246, 249, 0.7);
             --terminal-bg: #ffffff;
+            --terminal-bg-glass: rgba(255, 255, 255, 0.45);
             --terminal-bar-bg: #eaedf3;
+            --terminal-bar-bg-glass: rgba(234, 237, 243, 0.55);
             --terminal-text: #1f2328;
             --terminal-border: var(--border);
         }
 
         html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--green-muted) var(--bg); }
+        html.loading, body.loading { overflow: hidden !important; height: 100vh !important; }
         html::-webkit-scrollbar { width: 5px; }
         html::-webkit-scrollbar-track { background: var(--bg); }
         html::-webkit-scrollbar-thumb { background: var(--green-muted); border-radius: 5px; }
@@ -199,14 +204,43 @@
         /* ===== INTERACTIVE TERMINAL ===== */
         #terminal-section { padding-top: 2rem; padding-bottom: 2rem; }
         .terminal-window {
-            background: var(--terminal-bg); border: 1px solid var(--terminal-border); border-radius: 14px;
+            position: relative;
+            background: var(--terminal-bg-glass);
+            backdrop-filter: blur(12px) saturate(1.2);
+            -webkit-backdrop-filter: blur(12px) saturate(1.2);
+            border: 1px solid var(--terminal-border); border-radius: 14px;
             overflow: hidden; max-width: 800px; margin: 0 auto;
             box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(0,255,136,0.03);
-            transition: background 0.3s ease, border-color 0.3s ease;
+            transition: background 0.3s ease, border-color 0.3s ease, height 0.3s ease, max-height 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+        }
+        .terminal-window::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.015), rgba(0, 255, 0, 0.008), rgba(0, 0, 255, 0.015));
+            background-size: 100% 4px, 6px 100%;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        @keyframes crt-sweep {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(500px); }
+        }
+        .terminal-window::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 60px;
+            background: linear-gradient(to bottom, transparent, rgba(0, 255, 136, 0.04), transparent);
+            z-index: 9998;
+            pointer-events: none;
+            animation: crt-sweep 8s linear infinite;
         }
         .terminal-bar {
             display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem;
-            background: var(--terminal-bar-bg); border-bottom: 1px solid var(--terminal-border);
+            background: var(--terminal-bar-bg-glass); border-bottom: 1px solid var(--terminal-border);
             transition: background 0.3s ease, border-color 0.3s ease;
         }
         .term-dot { width: 10px; height: 10px; border-radius: 50%; }
@@ -231,7 +265,8 @@
         .term-output.amber { color: var(--amber); }
         .term-output.red { color: var(--red); }
         .term-output.bold { font-weight: 700; }
-        .term-ascii { color: var(--green); font-size: 0.6rem; line-height: 1.15; white-space: pre; }
+        .term-ascii { color: var(--green); font-size: clamp(0.35rem, 1.8vw, 0.65rem); line-height: 1.15; white-space: pre; display: block; overflow-x: auto; scrollbar-width: none; }
+        .term-ascii::-webkit-scrollbar { display: none; }
         .terminal-input-line {
             display: flex; align-items: center; gap: 0; margin-top: 0.3rem;
         }
@@ -268,7 +303,12 @@
         .skills-container { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
         .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .skill-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; transition: all 0.3s ease; perspective: 800px; }
-        .skill-card:hover { border-color: var(--green-border); background: var(--bg-card-hover); }
+        .skill-card:hover {
+            border-color: rgba(0, 255, 136, 0.4) !important;
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.04), 0 0 12px rgba(0, 255, 136, 0.02);
+        }
         .skill-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
         .skill-icon-box { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; background: var(--green-bg); border: 1px solid var(--green-border); }
         .skill-name { font-family: var(--mono); font-size: 0.85rem; font-weight: 600; color: var(--text); }
@@ -303,7 +343,12 @@
         .pf-link:hover { background: var(--green-bg); border-color: var(--green); transform: translateY(-2px); }
         .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
         .proj-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; transition: all 0.3s ease; display: flex; flex-direction: column; perspective: 800px; }
-        .proj-card:hover { border-color: var(--green-border); background: var(--bg-card-hover); }
+        .proj-card:hover {
+            border-color: rgba(0, 255, 136, 0.4) !important;
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.04), 0 0 12px rgba(0, 255, 136, 0.02);
+        }
         .proj-card-icon { font-size: 1.5rem; margin-bottom: 1rem; }
         .proj-card h3 { font-family: var(--sans); font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; }
         .proj-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; flex-grow: 1; margin-bottom: 1rem; }
@@ -404,7 +449,21 @@
             .projects-grid { grid-template-columns: 1fr; }
             .contact-layout { grid-template-columns: 1fr; }
         }
-        @media (max-width: 480px) { .hero-name { font-size: 2.2rem; } }
+        @media (max-width: 480px) {
+            .hero-name { font-size: 2.5rem; }
+            .hero-actions { justify-content: center; }
+            .hero-inner { text-align: center; }
+            .hero-terminal { font-size: 0.85rem; }
+            .hero-bio { font-size: 0.95rem; }
+            .terminal-body { padding: 0.8rem; }
+            .terminal-input-prompt, .term-prompt { font-size: 0px !important; }
+            .terminal-input-prompt::before, .term-prompt::before { content: '$ '; font-size: 0.8rem !important; color: var(--green); }
+            #terminal-fab { right: 1.5rem !important; bottom: 5.5rem !important; }
+            #back-to-top { right: 1.5rem !important; bottom: 1.5rem !important; }
+            .nav-menu { width: 220px; }
+            .heatmap-card { padding: 1rem; }
+            .stat-box { padding: 0.8rem 0.4rem; }
+        }
 
         /* ===== PROGRESS BARS ===== */
         .skill-progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.04); border-radius: 3px; overflow: hidden; margin: 0.5rem 0 1rem; border: 1px solid var(--border); }
@@ -427,9 +486,46 @@
         /* ===== BACK TO TOP ===== */
         #back-to-top { position: fixed; right: 2rem; bottom: 2rem; z-index: 999; opacity: 0; transform: translateY(20px); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); width: 44px; height: 44px; border-radius: 8px; font-family: var(--mono); font-size: 0.8rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; cursor: none; outline: none; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
         #back-to-top:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); transform: translateY(-2px); }
+        a.news-link-hover:hover { color: var(--green) !important; text-shadow: 0 0 8px var(--green-glow); }
+        .news-card-item:hover { border-color: var(--green-border) !important; background: var(--bg-card-hover) !important; transform: translateY(-2px); }
+        
+        /* ===== FLOATING TERMINAL TOGGLE BUTTON (FAB) ===== */
+        #terminal-fab {
+            position: fixed; right: 5.5rem; bottom: 2rem; z-index: 999;
+            opacity: 0; transform: translateY(20px);
+            border: 1px solid var(--border); background: var(--bg-card);
+            color: var(--green); width: 44px; height: 44px; border-radius: 8px;
+            font-family: var(--mono); font-size: 0.95rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s ease; cursor: none; outline: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 10px rgba(0,255,136,0.1);
+        }
+        #terminal-fab:hover { border-color: var(--green); color: var(--bg); background: var(--green); box-shadow: 0 0 15px var(--green-glow); transform: translateY(-2px); }
+        
+        #terminalContent {
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            max-height: 600px;
+            overflow: hidden;
+            opacity: 1;
+        }
+        .terminal-window.minimized #terminalContent {
+            max-height: 0px !important;
+            opacity: 0 !important;
+            padding: 0 !important;
+        }
+        
+        /* Maximize full width and expand body */
+        .terminal-window.maximized {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        .terminal-window.maximized .terminal-body {
+            max-height: 70vh !important;
+            height: 70vh !important;
+        }
     </style>
 </head>
-<body>
+<body class="loading">
 
     <!-- Custom Cursor -->
     <div class="cursor-dot" id="cursorDot"></div>
@@ -455,7 +551,7 @@
         <canvas id="konami-canvas"></canvas>
         <div class="konami-content">
             <div class="konami-title">ACCESS GRANTED 🔓</div>
-            <div class="konami-msg">You found the secret! You clearly have a hacker's mindset.<br>Here's a fun fact: I built a cloud security scanner with 200+ checks.</div>
+            <div class="konami-msg">You found the secret! You clearly have a hacker's mindset.<br>Here's a fun fact: I built an automated vulnerability auditing suite with 200+ checks.</div>
             <button class="konami-close" onclick="document.getElementById('konami-overlay').classList.remove('active')">[ ESC ] Close</button>
         </div>
     </div>
@@ -463,7 +559,7 @@
     <div class="content">
         <!-- Nav -->
         <nav class="nav" id="navbar">
-            <a href="#hero" class="nav-brand"><span class="dot"></span> subash.dev</a>
+            <a href="#hero" class="nav-brand"><span class="dot"></span> subash.sec</a>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#hero">Home</a></li>
                 <li><a href="#terminal-section">Terminal</a></li>
@@ -490,7 +586,7 @@
                 <div id="time-greeting" style="font-family: var(--mono); font-size: 0.85rem; color: var(--cyan); margin-bottom: 0.5rem; letter-spacing: 2px; text-transform: uppercase;"></div>
                 <h1 class="hero-name"><span class="accent">Subash</span><br>Uduwaka</h1>
                 <div class="hero-terminal"><span class="prompt">→ </span><span id="typed"></span><span class="cursor-blink"></span></div>
-                <p class="hero-bio">A <strong>cloud-focused cybersecurity student</strong> at Edith Cowan University with hands-on experience securing <strong>multi-cloud infrastructures</strong> across AWS, GCP, and Azure.</p>
+                <p class="hero-bio">A <strong>cybersecurity student</strong> at Edith Cowan University with hands-on experience in <strong>threat hunting, ethical hacking, and network defense</strong>.</p>
                 <div class="hero-actions">
                     <a href="#projects" class="btn btn-fill magnetic">View Projects ↓</a>
                     <a href="Subash_Uduwaka_CV1.pdf" class="btn btn-ghost magnetic" download>Download CV ↗</a>
@@ -510,30 +606,32 @@
             <p class="section-sub fade-up">Type commands below to explore my portfolio. It's fully interactive!</p>
             <div class="terminal-window fade-up">
                 <div class="terminal-bar">
-                    <div class="term-dot red"></div>
-                    <div class="term-dot yellow"></div>
-                    <div class="term-dot green"></div>
+                    <div class="term-dot red" id="term-dot-red" style="cursor: pointer;" title="Close"></div>
+                    <div class="term-dot yellow" id="term-dot-yellow" style="cursor: pointer;" title="Minimize"></div>
+                    <div class="term-dot green" id="term-dot-green" style="cursor: pointer;" title="Maximize"></div>
                     <span class="terminal-title">subash@portfolio:~</span>
                 </div>
-                <div class="terminal-body" id="terminalBody">
-                    <div class="term-line"><span class="term-ascii">
+                <div class="terminal-content" id="terminalContent">
+                    <div class="terminal-body" id="terminalBody">
+                        <div class="term-line"><span class="term-ascii">
   ____        _               _     
  / ___| _   _| |__   __ _ ___| |__  
  \___ \| | | | '_ \ / _` / __| '_ \ 
   ___) | |_| | |_) | (_| \__ \ | | |
  |____/ \__,_|_.__/ \__,_|___/_| |_|
-                    </span></div>
-                    <div class="term-line"><span class="term-output green">Welcome to Subash's Interactive Portfolio Terminal v2.0</span></div>
-                    <div class="term-line"><span class="term-output">Type <span style="color:var(--cyan)">help</span> to see available commands.</span></div>
-                    <div class="term-line">&nbsp;</div>
-                </div>
-                <div style="padding: 0 1.2rem 0.8rem;">
-                    <div class="terminal-input-line">
-                        <span class="terminal-input-prompt">visitor@subash:~$ </span>
-                        <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" autofocus>
+                        </span></div>
+                        <div class="term-line"><span class="term-output green">Welcome to Subash's Interactive Portfolio Terminal v2.0</span></div>
+                        <div class="term-line"><span class="term-output">Type <span style="color:var(--cyan)">help</span> to see available commands.</span></div>
+                        <div class="term-line">&nbsp;</div>
                     </div>
+                    <div style="padding: 0 1.2rem 0.8rem;">
+                        <div class="terminal-input-line">
+                            <span class="terminal-input-prompt">visitor@subash:~$ </span>
+                            <input type="text" id="terminal-input" autocomplete="off" spellcheck="false">
+                        </div>
+                    </div>
+                    <div class="term-hint">Try: <kbd>help</kbd> <kbd>whoami</kbd> <kbd>skills</kbd> <kbd>projects</kbd> <kbd>ai-audit</kbd> <kbd>cyber-range</kbd> <kbd>sudo hire-me</kbd> <kbd>clear</kbd></div>
                 </div>
-                <div class="term-hint">Try: <kbd>help</kbd> <kbd>whoami</kbd> <kbd>skills</kbd> <kbd>projects</kbd> <kbd>ai-audit</kbd> <kbd>cyber-range</kbd> <kbd>sudo hire-me</kbd> <kbd>clear</kbd></div>
             </div>
         </section>
 
@@ -541,19 +639,19 @@
         <section id="about">
             <div class="section-tag fade-up">About</div>
             <h2 class="section-heading fade-up">Get to know <em>me</em></h2>
-            <p class="section-sub fade-up">Cybersecurity researcher with a passion for defending cloud infrastructure.</p>
+            <p class="section-sub fade-up">Cybersecurity researcher specializing in vulnerability auditing, threat hunting, and system defense.</p>
             <div class="about-layout">
                 <div class="about-photo fade-up">
                     <img src="https://avatars.githubusercontent.com/u/66825318?v=4" alt="Subash Uduwaka" loading="lazy">
                 </div>
                 <div class="about-content">
-                    <p class="fade-up">Skilled in assessing <strong>cloud security posture</strong>, identifying <strong>IAM misconfigurations</strong>, and automating compliance checks against frameworks like <em>SOC2</em>, <em>PCI-DSS</em>, <em>GDPR</em>, and <em>HIPAA</em>.</p>
+                    <p class="fade-up">Skilled in assessing <strong>system security postures</strong>, identifying <strong>access control misconfigurations</strong>, and automating compliance audits against frameworks like <em>SOC2</em>, <em>PCI-DSS</em>, <em>GDPR</em>, and <em>HIPAA</em>.</p>
                     <p class="fade-up">Supported by a comprehensive understanding of core information security principles and network security fundamentals from my degree at <strong>Edith Cowan University</strong>.</p>
-                    <p class="fade-up">Pursuing BSc in Cyber Security (expected Feb 2026), eager to apply practical defense skills in enterprise cloud environments.</p>
+                    <p class="fade-up">Pursuing BSc in Cyber Security (expected Feb 2026), eager to apply practical threat mitigation and incident response skills in enterprise systems.</p>
                     <div class="stats-row fade-up">
                         <div class="stat-box"><div class="stat-val" data-target="11">0</div><div class="stat-lbl">Repos</div></div>
                         <div class="stat-box"><div class="stat-val" data-target="200">0</div><div class="stat-lbl">Sec Checks</div></div>
-                        <div class="stat-box"><div class="stat-val" data-target="3">0</div><div class="stat-lbl">Clouds</div></div>
+                        <div class="stat-box"><div class="stat-val" data-target="3">0</div><div class="stat-lbl">Platforms</div></div>
                         <div class="stat-box"><div class="stat-val" data-target="2026">0</div><div class="stat-lbl">Grad Year</div></div>
                     </div>
                     <!-- GitHub Heatmap Card -->
@@ -610,7 +708,7 @@
                         <div class="skill-tags"><span class="tag">Kali Linux</span><span class="tag">Ubuntu</span><span class="tag">Windows Server</span><span class="tag">macOS</span><span class="tag">WSL</span></div>
                     </div>
                     <div class="skill-card tilt-card fade-up delay-1">
-                        <div class="skill-header"><div class="skill-icon-box">☁️</div><div class="skill-name">Cloud & DevOps</div></div>
+                        <div class="skill-header"><div class="skill-icon-box">☁️</div><div class="skill-name">SecOps & Infra</div></div>
                         <div class="skill-progress-bar"><div class="skill-progress-fill" data-percent="85"></div></div>
                         <div class="skill-tags"><span class="tag">AWS</span><span class="tag">GCP</span><span class="tag">Azure</span><span class="tag">Docker</span><span class="tag">Git</span><span class="tag">CI/CD</span></div>
                     </div>
@@ -629,22 +727,23 @@
             <p class="section-sub fade-up">Real-world security tools I've built to solve real problems.</p>
             <div class="project-featured fade-up">
                 <div class="pf-badge">★ Featured Project</div>
-                <h3 class="pf-title">Aegis Cloud Security Scanner</h3>
-                <p class="pf-subtitle">Enterprise-grade multi-cloud security assessment & compliance platform</p>
+                <h3 class="pf-title">Aegis Vulnerability Suite</h3>
+                <p class="pf-subtitle">Enterprise-grade vulnerability assessment & system compliance platform</p>
                 <div class="pf-features">
-                    <div class="pf-feature">Automated vulnerability detection across AWS, GCP & Azure</div>
-                    <div class="pf-feature">200+ security checks for IAM, S3, EC2, VPC</div>
+                    <div class="pf-feature">Automated vulnerability detection and configuration auditing</div>
+                    <div class="pf-feature">200+ security checks for identity policies, system groups, and networks</div>
                     <div class="pf-feature">MFA, AES-256 encryption, XSS/SQLi prevention</div>
-                    <div class="pf-feature">AI chatbot via Google Gemini for security guidance</div>
+                    <div class="pf-feature">Automated remediation recommendations for identified vulnerabilities</div>
                     <div class="pf-feature">PostgreSQL, Redis, Celery async pipeline</div>
                     <div class="pf-feature">Real-time WebSocket security dashboard</div>
                 </div>
+                <div class="pf-focus" style="display:none; height:0px;"></div>
                 <div class="pf-impact">
                     <div class="pf-impact-num">90%</div>
-                    <div class="pf-impact-text"><strong>Reduction in manual audit time</strong> — continuous compliance monitoring & centralized multi-cloud visibility</div>
+                    <div class="pf-impact-text"><strong>Reduction in manual audit time</strong> — continuous compliance monitoring & centralized vulnerability visibility</div>
                 </div>
                 <div class="pf-compliance"><span class="compliance-chip">SOC2</span><span class="compliance-chip">PCI-DSS</span><span class="compliance-chip">GDPR</span><span class="compliance-chip">HIPAA</span></div>
-                <div class="pf-stack"><span class="stack-tag">Python</span><span class="stack-tag">Flask</span><span class="stack-tag">PostgreSQL</span><span class="stack-tag">AWS Boto3</span><span class="stack-tag">GCP APIs</span><span class="stack-tag">Azure SDK</span><span class="stack-tag">Docker</span><span class="stack-tag">Redis</span><span class="stack-tag">Gemini AI</span><span class="stack-tag">WebSockets</span></div>
+                <div class="pf-stack"><span class="stack-tag">Python</span><span class="stack-tag">Flask</span><span class="stack-tag">PostgreSQL</span><span class="stack-tag">Docker</span><span class="stack-tag">Redis</span><span class="stack-tag">APIs</span><span class="stack-tag">WebSockets</span><span class="stack-tag">Boto3</span><span class="stack-tag">Security SDKs</span></div>
                 <a href="https://github.com/SubashUduwaka/cloud-security-scanner" class="pf-link" target="_blank" rel="noopener">↗ View on GitHub</a>
             </div>
             <div class="projects-grid">
@@ -662,10 +761,10 @@
             <div class="projects-grid">
                 <div class="proj-card tilt-card fade-up" style="cursor: none;" onclick="openWriteup('aegis-arch')">
                     <div class="proj-card-icon">🔐</div>
-                    <h3>Aegis Scanner Architecture</h3>
-                    <p>Inside the engineering of an enterprise-grade multi-cloud scanner: orchestrating 200+ compliance checks asynchronously using Redis, Celery, and Flask.</p>
+                    <h3>Aegis Audit Architecture</h3>
+                    <p>Inside the engineering of an enterprise-grade compliance scanner: orchestrating 200+ automated audits asynchronously using Redis, Celery, and Flask.</p>
                     <div class="proj-card-foot">
-                        <span class="proj-card-tech">Cloud · Systems</span>
+                        <span class="proj-card-tech">Systems · Auditing</span>
                         <span style="color: var(--green); font-family: var(--mono); font-size: 0.7rem;">[ READ LOG ]</span>
                     </div>
                 </div>
@@ -679,13 +778,25 @@
                     </div>
                 </div>
                 <div class="proj-card tilt-card fade-up delay-2" style="cursor: none;" onclick="openWriteup('iam-privesc')">
-                    <div class="proj-card-icon">☁️</div>
-                    <h3>AWS IAM Privilege Escalation</h3>
-                    <p>Securing IAM configurations: breaking down common misconfigurations like PassRole abuse and policy editing that lead to full cloud account takeover.</p>
+                    <div class="proj-card-icon">🔐</div>
+                    <h3>Access Control Privilege Escalation</h3>
+                    <p>Securing identity & access configurations: breaking down privilege escalation pathways and access path abuses that lead to system takeovers.</p>
                     <div class="proj-card-foot">
-                        <span class="proj-card-tech">AWS · IAM Security</span>
+                        <span class="proj-card-tech">Access Control · Security</span>
                         <span style="color: var(--green); font-family: var(--mono); font-size: 0.7rem;">[ READ LOG ]</span>
                     </div>
+            </div>
+
+            <!-- Live Cyber News Feed Widget -->
+            <div class="heatmap-card fade-up" style="margin-top: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <h3 style="font-family: var(--mono); font-size: 0.85rem; color: var(--green); font-weight: 600; display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                        📡 Live Threat Intelligence Feed <span style="display: inline-block; width: 6px; height: 6px; background: var(--red); border-radius: 50%; animation: blink 1.5s infinite;"></span>
+                    </h3>
+                    <span style="font-family: var(--mono); font-size: 0.65rem; color: var(--text-muted);">BLEEPINGCOMPUTER RSS GATEWAY</span>
+                </div>
+                <div id="cyber-news-feed" style="display: flex; flex-direction: column; gap: 0.8rem; font-family: var(--mono); font-size: 0.75rem;">
+                    <div style="color: var(--text-muted);">[CONNECTING] Establishing SSL connection to Threat Feed gateway...</div>
                 </div>
             </div>
         </section>
@@ -746,6 +857,7 @@
 
     <!-- Floating Back to Top Button -->
     <button id="back-to-top" class="magnetic" aria-label="Scroll to Top">▲</button>
+    <button id="terminal-fab" class="magnetic" aria-label="Toggle Terminal" style="opacity: 0; transform: translateY(20px);">&gt;_</button>
 
     <!-- Terminal Writeup Modal -->
     <div id="writeup-modal" style="position: fixed; inset: 0; z-index: 100000; background: rgba(6, 9, 15, 0.95); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; padding: 1.5rem;">
@@ -777,6 +889,12 @@
     import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
     import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
     import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+    // Force page to start at the top on reload
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
 
     // ========== THREE.JS CYBER SCENE ==========
     const canvas = document.getElementById('three-canvas');
@@ -981,6 +1099,64 @@
         });
     }
 
+    // ========== LIVE CYBER NEWS FEED ==========
+    window.latestNewsItems = [];
+    async function fetchCyberNews() {
+        const feedContainer = document.getElementById('cyber-news-feed');
+        if (!feedContainer) return;
+        
+        try {
+            const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.bleepingcomputer.com%2Ffeed%2F');
+            if (!res.ok) throw new Error('Response status not OK');
+            const data = await res.json();
+            
+            if (data.status === 'ok' && data.items && data.items.length > 0) {
+                window.latestNewsItems = data.items;
+                feedContainer.innerHTML = '';
+                
+                data.items.slice(0, 4).forEach(item => {
+                    const dateObj = new Date(item.pubDate);
+                    const dateStr = isNaN(dateObj.getTime()) ? item.pubDate.split(' ')[0] : dateObj.toLocaleDateString(undefined, {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    const card = document.createElement('div');
+                    card.style.padding = '0.75rem';
+                    card.style.border = '1px solid var(--border)';
+                    card.style.borderRadius = '8px';
+                    card.style.background = 'rgba(255, 255, 255, 0.01)';
+                    card.style.transition = 'all 0.25s ease';
+                    card.className = 'news-card-item tilt-card';
+                    
+                    card.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem; color: var(--text-muted); font-size: 0.65rem;">
+                            <span>📅 ${dateStr}</span>
+                            <span>BleepingComputer</span>
+                        </div>
+                        <a href="${item.link}" target="_blank" rel="noopener" class="news-link-hover" style="color: var(--text); text-decoration: none; font-weight: 600; display: block; margin-bottom: 0.25rem; font-size: 0.8rem; transition: color 0.2s;">
+                            ${item.title}
+                        </a>
+                    `;
+                    feedContainer.appendChild(card);
+                });
+            } else {
+                throw new Error('Invalid RSS structure');
+            }
+        } catch (err) {
+            console.error('Failed to load cybersecurity news feed:', err);
+            feedContainer.innerHTML = `
+                <div style="color: var(--red); font-weight: 500;">[CONNECTION FAILED] Gateway response timeout.</div>
+                <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 0.25rem;">Live feed temporarily unavailable. Type <kbd>news</kbd> in terminal to retry manually.</div>
+            `;
+        }
+    }
+    
+    // Fetch news immediately
+    fetchCyberNews();
+
     // ========== THEME TOGGLE (LIGHT/DARK MODE) ==========
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {
@@ -1141,6 +1317,7 @@
 
     // ========== SCROLL PROGRESS & BACK TO TOP ==========
     const bttBtn = document.getElementById('back-to-top');
+    const termFab = document.getElementById('terminal-fab');
     const scrollBar = document.getElementById('scroll-progress');
     window.addEventListener('scroll', () => {
         const progress = (window.scrollY) / (document.documentElement.scrollHeight - window.innerHeight) * 100;
@@ -1148,9 +1325,17 @@
         if (window.scrollY > 300) {
             bttBtn.style.opacity = '1';
             bttBtn.style.transform = 'translateY(0)';
+            if (termFab) {
+                termFab.style.opacity = '1';
+                termFab.style.transform = 'translateY(0)';
+            }
         } else {
             bttBtn.style.opacity = '0';
             bttBtn.style.transform = 'translateY(20px)';
+            if (termFab) {
+                termFab.style.opacity = '0';
+                termFab.style.transform = 'translateY(20px)';
+            }
         }
     });
     if (bttBtn) {
@@ -1169,25 +1354,25 @@
     // ========== CTF WRITEUPS DATA & HANDLERS ==========
     const writeupData = {
         'aegis-arch': {
-            title: 'aegis_scanner_architecture.md',
+            title: 'aegis_audit_architecture.md',
             content: `
-# AEGIS CLOUD SECURITY SCANNER: ENGINEERING AND ARCHITECTURE
-============================================================
+# AEGIS AUDITING & SCANNING SYSTEM: ENGINEERING AND ARCHITECTURE
+==============================================================
 [STATUS]: ARCHIVED LOG // AUDIT COMPLETE
 
 ## 1. Executive Overview
-Aegis is an enterprise-grade multi-cloud compliance and vulnerability detection platform built to assess security posture across AWS, GCP, and Azure. The core challenge was orchestrating 200+ distinct security tests concurrently without creating performance bottlenecks.
+Aegis is an enterprise-grade compliance and vulnerability detection suite built to assess system and network security postures. The core challenge was orchestrating 200+ distinct security audits concurrently without creating performance bottlenecks.
 
 ## 2. Technical Stack & Architecture
 - **Web App**: Flask (Python) with SQLAlchemy & PostgreSQL for scanning history.
 - **Queueing & Async**: Celery with Redis as a broker to run scans out-of-band.
-- **Cloud APIs**: AWS Boto3, GCP API client libraries, Azure SDK.
-- **AI Integration**: Google Gemini API for automated risk mitigation suggestions.
+- **Security Interfaces**: Platform APIs, Boto3, GCP SDKs, Azure SDKs.
+- **Remediation**: Rule-based remediation engine for instant configuration patching.
 
 ## 3. Key Implementations
-- **Asynchronous Processing**: Scans execute as background jobs. Results are pushed via WebSockets (Flask-SocketIO) for real-time status updates on a live dashboard.
-- **Modular Checking Engine**: Abstracted scanner classes. Adding a check is as simple as defining a rule (e.g. verifying S3 Bucket policy contains no public read permissions).
-- **Security-First Design**: Implemented strict token validation, encrypted database fields for temporary API access tokens (AES-256), and sanitization of scanner outputs to prevent log injection.
+- **Asynchronous Processing**: Audits execute as background jobs. Results are pushed via WebSockets (Flask-SocketIO) for real-time status updates on a live dashboard.
+- **Modular Checking Engine**: Abstracted scanner classes. Adding a check is as simple as defining a rule (e.g. verifying policy contains no wildcard public permissions).
+- **Security-First Design**: Implemented strict token validation, encrypted database fields for temporary credentials (AES-256), and sanitization of scanner outputs to prevent log injection.
             `
         },
         'can-bus': {
@@ -1198,7 +1383,7 @@ Aegis is an enterprise-grade multi-cloud compliance and vulnerability detection 
 [STATUS]: RESEARCH ARCHIVE // NAV-NAV AREA SECURED
 
 ## 1. Introduction
-Modern vehicles contain dozens of Engine Control Units (ECUs) communicating via the Controller Area Network (CAN) bus. In my experience at Uduwaka Motors, I analysed embedded telemetry anomalies and performed diagnostic system analysis.
+Modern vehicles contain dozens of Engine Control Units (ECUs) communicating via the Controller Area Network (CAN) bus. In my experience at Uduwaka Motors, I analysed telemetry anomalies and performed diagnostic system analysis.
 
 ## 2. Threat Modeling the CAN Bus
 - **Lack of Encryption**: CAN bus traffic is unencrypted by design. Anyone with physical access to OBD-II port can read/write packets.
@@ -1211,24 +1396,24 @@ Modern vehicles contain dozens of Engine Control Units (ECUs) communicating via 
             `
         },
         'iam-privesc': {
-            title: 'aws_iam_privilege_escalation.txt',
+            title: 'access_control_privilege_escalation.txt',
             content: `
-# CLOUD ATTACK PATHWAYS: AWS IAM PRIVILEGE ESCALATION
-=====================================================
+# IDENTITY ATTACK PATHWAYS: ACCESS CONTROL PRIVILEGE ESCALATION
+===============================================================
 [STATUS]: SECURITY ADVISORY // REMEDIATION READY
 
 ## 1. Abstract
-Identity & Access Management (IAM) is the primary security boundary in cloud infrastructure. In my research, I evaluated common configuration gaps that permit users to elevate their privileges to AdministratorAccess.
+Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary security boundaries in modern systems. In my research, I evaluated common configuration gaps that permit users to elevate their privileges to root/administrator access.
 
 ## 2. Critical Attack Vectors Analysed
-- **iam:PassRole & ec2:RunInstances**: If a developer has permission to run EC2 instances and pass any IAM role to them, they can launch an instance with an Administrator role, SSH into it, and steal the metadata credentials.
+- **iam:PassRole / Privilege Passing**: If an operator has permission to pass highly privileged system roles to resources, they can escalate their access by assigning an administrator role to a resource under their control.
 - **iam:CreatePolicyVersion**: An attacker with this privilege can create a new version of an existing policy they are attached to, defining full '*' admin privileges, and set it as active.
 - **iam:AttachUserPolicy**: Directly attaching highly privileged policies to their own account.
 
 ## 3. Remediation & Detection
 - Enforce strict Permission Boundaries.
-- Implement least-privilege for iam:PassRole (restrict Target Resource ARNs).
-- Continuous auditing using toolsets like Aegis Scanner to auto-alert on dangerous IAM permissions.
+- Implement least-privilege for privilege-passing properties (restrict Target Resource ARNs).
+- Continuous auditing using toolsets like Aegis Suite to auto-alert on dangerous permissions.
             `
         }
     };
@@ -1373,8 +1558,9 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
             {t:'cyan',v:'  whoami        → Who is Subash?'},
             {t:'cyan',v:'  skills        → View technical skills'},
             {t:'cyan',v:'  projects      → View projects'},
-            {t:'cyan',v:'  ai-audit      → Run Aegis AI Security Policy Auditor (Interactive) 🤖'},
+            {t:'cyan',v:'  ai-audit      → Run Aegis Vulnerability & Security Policy Auditor 🤖'},
             {t:'cyan',v:'  cyber-range   → Threat Hunting Incident Command Game (Play) 🎮'},
+            {t:'cyan',v:'  news          → Fetch latest threat intelligence news feed 📡'},
             {t:'cyan',v:'  education     → View education'},
             {t:'cyan',v:'  experience    → View work experience'},
             {t:'cyan',v:'  contact       → Get contact info'},
@@ -1389,10 +1575,10 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
         'ai-audit':()=> {
             currentTerminalMode = 'ai-audit';
             return [
-                {t:'green bold',v:'🤖 AEGIS CLOUD SECURITY CO-PILOT AUDIT ACTIVE'},
+                {t:'green bold',v:'🛡️ AEGIS SECURITY & AUDITING SYSTEM ACTIVE'},
                 {t:'',v:'This utility audits configurations for compliance anomalies (SOC2, HIPAA).'},
                 {t:'',v:''},
-                {t:'cyan',v:'Choose a mock cloud template to audit:'},
+                {t:'cyan',v:'Choose a mock configuration template to audit:'},
                 {t:'cyan',v:'  [1] AWS S3 Public Read Bucket Policy'},
                 {t:'cyan',v:'  [2] AWS IAM Admin Privilege Escalation Permission'},
                 {t:'cyan',v:'  [3] Unencrypted PostgreSQL Security Group Policy'},
@@ -1427,24 +1613,24 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
             {t:'',v:'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'},
             {t:'',v:'📍 Sri Lanka'},
             {t:'',v:'🎓 BSc Cyber Security @ Edith Cowan University'},
-            {t:'',v:'🛡️ Cloud Security | Ethical Hacking | Forensics'},
-            {t:'',v:'☁️ AWS · GCP · Azure'},
+            {t:'',v:'🛡️ Network Defense | Ethical Hacking | Forensics'},
+            {t:'',v:'🛡️ SIEM · Wireshark · Firewalls'},
             {t:'',v:'💻 "Eat · Sleep · Surf · Code · Ping"'},
         ],
         skills:()=>[
             {t:'green',v:'⟡ Technical Skills:'},
             {t:'',v:''},
             {t:'cyan',v:'  [████████████████████░░] 92%  Cybersecurity'},
-            {t:'cyan',v:'  [██████████████████░░░░] 85%  Cloud & DevOps'},
+            {t:'cyan',v:'  [██████████████████░░░░] 85%  SecOps & Infra'},
             {t:'cyan',v:'  [█████████████████░░░░░] 82%  Networking'},
             {t:'cyan',v:'  [████████████████░░░░░░] 80%  Operating Systems'},
             {t:'cyan',v:'  [███████████████░░░░░░░] 78%  Programming'},
             {t:'cyan',v:'  [██████████████░░░░░░░░] 72%  Database'},
         ],
         projects:()=>[
-            {t:'green bold',v:'★ Aegis Cloud Security Scanner'},
-            {t:'',v:'  Enterprise multi-cloud security assessment platform'},
-            {t:'',v:'  200+ checks | AWS/GCP/Azure | 90% audit time reduction'},
+            {t:'green bold',v:'★ Aegis Vulnerability Suite'},
+            {t:'',v:'  Enterprise vulnerability assessment & compliance platform'},
+            {t:'',v:'  200+ checks | Systems & Networks | 90% audit time reduction'},
             {t:'amber',v:'  → github.com/SubashUduwaka/cloud-security-scanner'},
             {t:'',v:''},
             {t:'green',v:'🍏 FX706LI Hackintosh EFI'},
@@ -1499,7 +1685,7 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
             {t:'amber',v:'  ⚡ HIRING PROTOCOL ACTIVATED ⚡'},
             {t:'',v:''},
             {t:'',v:'  You\'ve unlocked the ultimate command.'},
-            {t:'',v:'  I\'m ready to bring my cloud security expertise'},
+            {t:'',v:'  I\'m ready to bring my cybersecurity and threat hunting expertise'},
             {t:'',v:'  to your team. Let\'s build something secure together!'},
             {t:'',v:''},
             {t:'cyan',v:'  📧 subash.uduwaka@gmail.com'},
@@ -1515,7 +1701,7 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
             {t:'',v:'  DE:     Terminal-based Portfolio'},
             {t:'cyan',v:'  Uptime: Since 2020'},
             {t:'cyan',v:'  Repos:  11'},
-            {t:'cyan',v:'  Clouds: AWS, GCP, Azure'},
+            {t:'cyan',v:'  Specs:  Threat Defense, SIEM, Firewalls'},
         ],
         date:()=>[{t:'',v:'  '+new Date().toString()}],
         'ping subash':()=>[
@@ -1527,6 +1713,40 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
             {t:'',v:'  3 packets transmitted, 3 received, 0% packet loss'},
             {t:'green',v:'  ✓ Subash is online and ready to connect!'},
         ],
+        news:()=> {
+            if (window.latestNewsItems && window.latestNewsItems.length > 0) {
+                const lines = [
+                    {t:'green bold',v:'📡 LATEST THREAT INTELLIGENCE FEED FROM BLEEPINGCOMPUTER:'},
+                    {t:'',v:'------------------------------------------------------------'}
+                ];
+                window.latestNewsItems.slice(0, 5).forEach((item, idx) => {
+                    const date = new Date(item.pubDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                    lines.push({t:'cyan',v:` [${idx+1}] ${item.title} (${date})`});
+                    lines.push({t:'',v:`     Link: ${item.link}`});
+                });
+                return lines;
+            } else {
+                setTimeout(async () => {
+                    try {
+                        const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.bleepingcomputer.com%2Ffeed%2F');
+                        const data = await res.json();
+                        if (data.status === 'ok' && data.items) {
+                            window.latestNewsItems = data.items;
+                            printTerminalLines([
+                                {t:'green',v:'✓ Threat Intelligence Feed updated.'},
+                                {t:'cyan',v:'Type "news" to view headlines.'}
+                            ]);
+                        }
+                    } catch (e) {
+                        printTerminalLines([{t:'red',v:'[ERROR] Failed to fetch threat feed.'}]);
+                    }
+                }, 100);
+                return [
+                    {t:'amber',v:'[CONNECTING] Connecting to Threat Intelligence feed gateway...'},
+                    {t:'',v:'Attempting dynamic fetch. Headlines will print below when ready.'}
+                ];
+            }
+        },
     };
 
     let currentTerminalMode = 'normal';
@@ -1652,7 +1872,7 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
                     { t: 'green bold', v: '|                                         |' },
                     { t: 'green bold', v: '|      [ SECOPS LEVEL 1 CERTIFIED ]       |' },
                     { t: 'green bold', v: '|      - INCIDENT COMMAND DEFENDER -      |' },
-                    { t: 'green bold', v: '|  Verified: subash.dev // ' + new Date().toISOString().split('T')[0] + '    |' },
+                    { t: 'green bold', v: '|  Verified: subash.sec // ' + new Date().toISOString().split('T')[0] + '    |' },
                     { t: 'green bold', v: '\\________________________________________/' },
                     { t: '', v: '' },
                     { t: 'green bold', v: 'Congratulations, defender! You successfully protected node APEX-DB-01.' },
@@ -1710,11 +1930,73 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
         termBody.scrollTop=termBody.scrollHeight;
     });
 
-    // Click-to-focus terminal input
+    // Click-to-focus terminal input (only when not clicking action dots)
     const terminalWindow = document.querySelector('#terminal-section .terminal-window');
     if (terminalWindow && termInput) {
-        terminalWindow.addEventListener('click', () => {
-            termInput.focus();
+        terminalWindow.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('term-dot')) {
+                termInput.focus();
+            }
+        });
+    }
+
+    // ========== TERMINAL WINDOW CONTROLS ==========
+    const redDot = document.getElementById('term-dot-red');
+    const yellowDot = document.getElementById('term-dot-yellow');
+    const greenDot = document.getElementById('term-dot-green');
+
+    if (redDot && terminalWindow) {
+        redDot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            terminalWindow.style.opacity = '0';
+            terminalWindow.style.transform = 'scale(0.95) translateY(10px)';
+            setTimeout(() => {
+                terminalWindow.style.display = 'none';
+            }, 300);
+        });
+    }
+
+    if (yellowDot && terminalWindow) {
+        yellowDot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            terminalWindow.classList.toggle('minimized');
+        });
+    }
+
+    if (greenDot && terminalWindow) {
+        greenDot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            terminalWindow.classList.toggle('maximized');
+            // Maximize triggers window resize rendering
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 300);
+        });
+    }
+
+    // ========== FLOATING TERMINAL TOGGLE BUTTON (FAB) ==========
+    if (termFab && terminalWindow) {
+        termFab.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (terminalWindow.style.display === 'none' || terminalWindow.style.opacity === '0') {
+                terminalWindow.style.display = 'block';
+                // Trigger reflow to ensure animation runs
+                terminalWindow.offsetHeight;
+                terminalWindow.style.opacity = '1';
+                terminalWindow.style.transform = 'scale(1) translateY(0)';
+                // Scroll to terminal section
+                const section = document.getElementById('terminal-section');
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth' });
+                }
+                setTimeout(() => { termInput.focus(); }, 400);
+            } else {
+                terminalWindow.style.opacity = '0';
+                terminalWindow.style.transform = 'scale(0.95) translateY(10px)';
+                setTimeout(() => {
+                    terminalWindow.style.display = 'none';
+                }, 300);
+            }
         });
     }
 
@@ -1745,7 +2027,7 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
 
     // ========== TYPING EFFECT ==========
     const typedEl=document.getElementById('typed');
-    const phrases=['Cloud Security Specialist','Ethical Hacker & Researcher','Multi-Cloud Defense Engineer','BSc Cyber Security @ ECU','Building Aegis Cloud Scanner'];
+    const phrases=['Cybersecurity Analyst','Ethical Hacker & Security Researcher','Incident Response & Defense','BSc Cyber Security @ ECU','Threat Hunter & Auditor'];
     let pi=0,ci2=0,del=false;
     (function typeLoop(){
         const curr=phrases[pi];
@@ -1825,7 +2107,13 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
     let logIdx = 0;
     function runBootLoader() {
         if (!loaderConsole || !loaderBarInner || !loaderMsg) {
-            setTimeout(() => { if(loader) loader.classList.add('done'); triggerHeroEntrance(); }, 1000);
+            setTimeout(() => { 
+                if(loader) loader.classList.add('done'); 
+                document.documentElement.classList.remove('loading');
+                document.body.classList.remove('loading');
+                window.scrollTo(0, 0);
+                triggerHeroEntrance(); 
+            }, 1000);
             return;
         }
         
@@ -1846,6 +2134,9 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
             loaderMsg.textContent = "DECRYPTION COMPLETE. INITIALIZING SESSIONS...";
             setTimeout(() => {
                 loader.classList.add('done');
+                document.documentElement.classList.remove('loading');
+                document.body.classList.remove('loading');
+                window.scrollTo(0, 0);
                 setTimeout(triggerHeroEntrance, 400);
             }, 600);
         }
