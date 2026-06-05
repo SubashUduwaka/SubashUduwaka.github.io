@@ -533,7 +533,7 @@
                         <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" autofocus>
                     </div>
                 </div>
-                <div class="term-hint">Try: <kbd>help</kbd> <kbd>whoami</kbd> <kbd>skills</kbd> <kbd>projects</kbd> <kbd>contact</kbd> <kbd>sudo hire-me</kbd> <kbd>clear</kbd></div>
+                <div class="term-hint">Try: <kbd>help</kbd> <kbd>whoami</kbd> <kbd>skills</kbd> <kbd>projects</kbd> <kbd>ai-audit</kbd> <kbd>cyber-range</kbd> <kbd>sudo hire-me</kbd> <kbd>clear</kbd></div>
             </div>
         </section>
 
@@ -797,6 +797,7 @@
     octa.position.set(3,-3,-2); scene.add(octa);
 
     let activeSectionId = 'hero';
+    let systemState = 'secure';
 
     const sectionTargets = {
         'hero': {
@@ -885,10 +886,67 @@
         const t=clk.getElapsedTime();
         mx+=(tmx-mx)*0.03;my+=(tmy-my)*0.03;
 
+        // Color, Opacity & Rotation Speed transitions based on systemState
+        const isLight = document.documentElement.classList.contains('light-mode');
+        let targetColors = {
+            tk: isLight ? 0x00a854 : 0x00ff88,
+            ico: isLight ? 0x008ebd : 0x00d4ff,
+            octa: isLight ? 0x862cd4 : 0xa855f7
+        };
+        let targetOpacities = {
+            tk: isLight ? 0.08 : 0.035,
+            ico: isLight ? 0.07 : 0.030,
+            octa: isLight ? 0.06 : 0.025
+        };
+        let rotSpeedMult = 1.0;
+        let scaleMult = 1.0;
+
+        if (systemState === 'breach') {
+            const flash = Math.sin(t * 12) > 0;
+            const breachColor = flash ? (isLight ? 0xdc2626 : 0xff3344) : (isLight ? 0xd97706 : 0xffaa00);
+            targetColors = { tk: breachColor, ico: breachColor, octa: breachColor };
+            targetOpacities = { tk: isLight ? 0.26 : 0.16, ico: isLight ? 0.26 : 0.16, octa: isLight ? 0.24 : 0.14 };
+            rotSpeedMult = 5.0; // Spin fast!
+        } else if (systemState === 'remediating') {
+            const pulse = 0.6 + Math.sin(t * 5) * 0.25;
+            const remColor = isLight ? 0xd97706 : 0xff9900;
+            targetColors = { tk: remColor, ico: remColor, octa: remColor };
+            targetOpacities = { tk: (isLight ? 0.18 : 0.10) * pulse, ico: (isLight ? 0.16 : 0.09) * pulse, octa: (isLight ? 0.14 : 0.08) * pulse };
+            rotSpeedMult = 0.4; // Spin very slow
+        } else if (systemState === 'celebration') {
+            const pulse = 1.0 + Math.sin(t * 15) * 0.12;
+            const celColor = isLight ? 0x00a854 : 0x00ff88;
+            targetColors = { tk: celColor, ico: celColor, octa: celColor };
+            targetOpacities = { tk: isLight ? 0.35 : 0.22, ico: isLight ? 0.32 : 0.20, octa: isLight ? 0.28 : 0.18 };
+            rotSpeedMult = 3.5;
+            scaleMult = 1.6 * pulse;
+        }
+
+        // LERP material color helper
+        const colorLerp = (mesh, targetHex) => {
+            const targetColor = new THREE.Color(targetHex);
+            mesh.material.color.lerp(targetColor, 0.08);
+        };
+
+        colorLerp(tk, targetColors.tk);
+        tk.material.opacity += (targetOpacities.tk - tk.material.opacity) * 0.08;
+        tk.material.needsUpdate = true;
+
+        colorLerp(ico, targetColors.ico);
+        ico.material.opacity += (targetOpacities.ico - ico.material.opacity) * 0.08;
+        ico.material.needsUpdate = true;
+
+        colorLerp(octa, targetColors.octa);
+        octa.material.opacity += (targetOpacities.octa - octa.material.opacity) * 0.08;
+        octa.material.needsUpdate = true;
+
         // Rotation
-        tk.rotation.x=t*0.06+my*0.12;tk.rotation.y=t*0.09+mx*0.12;
-        ico.rotation.x=t*0.08-my*0.08;ico.rotation.y=-t*0.06+mx*0.08;
-        octa.rotation.x=t*0.12+my*0.1;octa.rotation.z=t*0.08;
+        tk.rotation.x = t * 0.06 * rotSpeedMult + my * 0.12;
+        tk.rotation.y = t * 0.09 * rotSpeedMult + mx * 0.12;
+        ico.rotation.x = t * 0.08 * rotSpeedMult - my * 0.08;
+        ico.rotation.y = -t * 0.06 * rotSpeedMult + mx * 0.08;
+        octa.rotation.x = t * 0.12 * rotSpeedMult + my * 0.1;
+        octa.rotation.z = t * 0.08 * rotSpeedMult;
         
         // Position & Scale transformations page-by-page LERP
         const targets = sectionTargets[activeSectionId] || sectionTargets['hero'];
@@ -896,19 +954,19 @@
         tk.position.x += (targets.tk.x - tk.position.x) * 0.05;
         tk.position.y += (targets.tk.y + Math.sin(t * 0.5) * 0.25 - tk.position.y) * 0.05;
         tk.position.z += (targets.tk.z - tk.position.z) * 0.05;
-        const tkScale = tk.scale.x + (targets.tk.scale - tk.scale.x) * 0.05;
+        const tkScale = tk.scale.x + (targets.tk.scale * scaleMult - tk.scale.x) * 0.05;
         tk.scale.set(tkScale, tkScale, tkScale);
 
         ico.position.x += (targets.ico.x - ico.position.x) * 0.05;
         ico.position.y += (targets.ico.y + Math.cos(t * 0.4) * 0.20 - ico.position.y) * 0.05;
         ico.position.z += (targets.ico.z - ico.position.z) * 0.05;
-        const icoScale = ico.scale.x + (targets.ico.scale - ico.scale.x) * 0.05;
+        const icoScale = ico.scale.x + (targets.ico.scale * scaleMult - ico.scale.x) * 0.05;
         ico.scale.set(icoScale, icoScale, icoScale);
 
         octa.position.x += (targets.octa.x - octa.position.x) * 0.05;
         octa.position.y += (targets.octa.y + Math.sin(t * 0.6) * 0.20 - octa.position.y) * 0.05;
         octa.position.z += (targets.octa.z - octa.position.z) * 0.05;
-        const octaScale = octa.scale.x + (targets.octa.scale - octa.scale.x) * 0.05;
+        const octaScale = octa.scale.x + (targets.octa.scale * scaleMult - octa.scale.x) * 0.05;
         octa.scale.set(octaScale, octaScale, octaScale);
 
         composer.render();
@@ -1315,6 +1373,8 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
             {t:'cyan',v:'  whoami        → Who is Subash?'},
             {t:'cyan',v:'  skills        → View technical skills'},
             {t:'cyan',v:'  projects      → View projects'},
+            {t:'cyan',v:'  ai-audit      → Run Aegis AI Security Policy Auditor (Interactive) 🤖'},
+            {t:'cyan',v:'  cyber-range   → Threat Hunting Incident Command Game (Play) 🎮'},
             {t:'cyan',v:'  education     → View education'},
             {t:'cyan',v:'  experience    → View work experience'},
             {t:'cyan',v:'  contact       → Get contact info'},
@@ -1326,6 +1386,42 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
             {t:'cyan',v:'  date          → Current date'},
             {t:'cyan',v:'  ping subash   → Ping me'},
         ],
+        'ai-audit':()=> {
+            currentTerminalMode = 'ai-audit';
+            return [
+                {t:'green bold',v:'🤖 AEGIS CLOUD SECURITY CO-PILOT AUDIT ACTIVE'},
+                {t:'',v:'This utility audits configurations for compliance anomalies (SOC2, HIPAA).'},
+                {t:'',v:''},
+                {t:'cyan',v:'Choose a mock cloud template to audit:'},
+                {t:'cyan',v:'  [1] AWS S3 Public Read Bucket Policy'},
+                {t:'cyan',v:'  [2] AWS IAM Admin Privilege Escalation Permission'},
+                {t:'cyan',v:'  [3] Unencrypted PostgreSQL Security Group Policy'},
+                {t:'cyan',v:'  [4] Abort audit session'},
+                {t:'',v:''},
+                {t:'amber',v:'Enter option number (1-4):'}
+            ];
+        },
+        'cyber-range':()=> {
+            currentTerminalMode = 'cyber-range';
+            gameStateStep = 0;
+            systemState = 'breach';
+            return [
+                {t:'red bold',v:'🚨 INCIDENT RESPONSE CYBER RANGE PROTOCOL ACTIVATED'},
+                {t:'red',v:'ALERT: Unauthorized Data Exfiltration on Node [APEX-DB-01]'},
+                {t:'text-secondary',v:'Isolating subnet... Injecting incident response shells...'},
+                {t:'',v:''},
+                {t:'green bold',v:'[STAGE 1: THREAT DETECTION]'},
+                {t:'',v:'Inspect the following active web access logs and locate the threat IP:'},
+                {t:'',v:''},
+                {t:'text-muted',v:'  Log A: 192.168.1.10 - - "GET /index.html HTTP/1.1" 200'},
+                {t:'text-muted',v:'  Log B: 10.0.12.8 - - "GET /assets/style.css HTTP/1.1" 200'},
+                {t:'amber bold',v:'  Log C: 192.168.4.12 - - "GET /products?id=1\' UNION SELECT username, password FROM users... HTTP/1.1" 200'},
+                {t:'text-muted',v:'  Log D: 127.0.0.1 - - "GET /healthz HTTP/1.1" 200'},
+                {t:'',v:''},
+                {t:'cyan',v:'Command format: detect <IP>'},
+                {t:'amber',v:'Enter command to flag attacker IP:'}
+            ];
+        },
         whoami:()=>[
             {t:'green bold',v:'SUBASH DANANJAYA UDUWAKA'},
             {t:'',v:'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'},
@@ -1433,31 +1529,184 @@ Identity & Access Management (IAM) is the primary security boundary in cloud inf
         ],
     };
 
+    let currentTerminalMode = 'normal';
+    let gameStateStep = 0;
+
+    function printTerminalLines(lines) {
+        lines.forEach(line => {
+            const div = document.createElement('div'); div.className = 'term-line';
+            div.innerHTML = `<span class="term-output ${line.t}">${line.v}</span>`;
+            termBody.appendChild(div);
+        });
+        const spacer = document.createElement('div'); spacer.className = 'term-line'; spacer.innerHTML = '&nbsp;'; termBody.appendChild(spacer);
+        termBody.scrollTop = termBody.scrollHeight;
+    }
+
+    function handleAiAuditInput(cmd) {
+        if (cmd === '1') {
+            runSimulatedAudit('s3');
+        } else if (cmd === '2') {
+            runSimulatedAudit('iam');
+        } else if (cmd === '3') {
+            runSimulatedAudit('sg');
+        } else if (cmd === '4') {
+            printTerminalLines([{ t: 'amber', v: 'Audit session cancelled. Returning to main console.' }]);
+            currentTerminalMode = 'normal';
+            systemState = 'secure';
+        } else {
+            printTerminalLines([{ t: 'red', v: 'Invalid option. Choose 1, 2, 3, or 4:' }]);
+        }
+    }
+
+    function runSimulatedAudit(type) {
+        systemState = 'remediating';
+        printTerminalLines([
+            { t: 'green', v: 'Aegis AI Auditor: Parsing configuration policy...' }
+        ]);
+        setTimeout(() => {
+            if (type === 's3') {
+                printTerminalLines([
+                    { t: 'red bold', v: '⚠️ [CRITICAL VULNERABILITY DETECTED: S3-042]' },
+                    { t: 'amber', v: 'Risk: Public Read Access policy allows wildcard principal (*).' },
+                    { t: 'amber', v: 'Compliance: Fails SOC2 CC6.3 & PCI-DSS v4.0 Req 1.2' },
+                    { t: 'text-secondary', v: '------------------------------------------------------------' },
+                    { t: 'green bold', v: '✓ Aegis AI Patched Terraform Block:' },
+                    { t: 'cyan', v: 'resource "aws_s3_bucket_public_access_block" "secure" {\n  bucket = aws_s3_bucket.data.id\n  block_public_acls       = true\n  block_public_policy     = true\n  ignore_public_acls      = true\n  restrict_public_buckets = true\n}' },
+                    { t: 'green bold', v: '✓ Remediation complete. Returning to main console.' }
+                ]);
+            } else if (type === 'iam') {
+                printTerminalLines([
+                    { t: 'red bold', v: '⚠️ [HIGH VULNERABILITY DETECTED: IAM-PRIV-09]' },
+                    { t: 'amber', v: 'Risk: "iam:PassRole" allowed on wildcard resource (*).' },
+                    { t: 'amber', v: 'Pathway: Permits EC2 instance takeover role escalation.' },
+                    { t: 'text-secondary', v: '------------------------------------------------------------' },
+                    { t: 'green bold', v: '✓ Aegis AI Patched IAM Policy Statement:' },
+                    { t: 'cyan', v: '{\n  "Effect": "Allow",\n  "Action": "iam:PassRole",\n  "Resource": "arn:aws:iam::123456789012:role/EC2-Worker-*"\n}' },
+                    { t: 'green bold', v: '✓ Remediation complete. Returning.' }
+                ]);
+            } else if (type === 'sg') {
+                printTerminalLines([
+                    { t: 'red bold', v: '⚠️ [HIGH VULNERABILITY DETECTED: SG-PORT-5432]' },
+                    { t: 'amber', v: 'Risk: PostgreSQL Database Port 5432 is open to the public internet (0.0.0.0/0).' },
+                    { t: 'text-secondary', v: '------------------------------------------------------------' },
+                    { t: 'green bold', v: '✓ Aegis AI Patched Security Group Ingress Rule:' },
+                    { t: 'cyan', v: 'ingress {\n  description = "Restrict database ingress to corporate subnet"\n  from_port   = 5432\n  to_port     = 5432\n  protocol    = "tcp"\n  cidr_blocks = ["10.0.0.0/16"]\n}' },
+                    { t: 'green bold', v: '✓ Remediation complete. Returning.' }
+                ]);
+            }
+            systemState = 'celebration';
+            setTimeout(() => { systemState = 'secure'; }, 1800);
+            currentTerminalMode = 'normal';
+        }, 1200);
+    }
+
+    function handleCyberRangeInput(cmd) {
+        if (gameStateStep === 0) {
+            if (cmd === 'detect 192.168.4.12') {
+                systemState = 'remediating';
+                gameStateStep = 1;
+                printTerminalLines([
+                    { t: 'green bold', v: '✓ SUCCESS: Threat IP identified.' },
+                    { t: 'cyan', v: 'Exploit signature matches SQL Injection (UNION SELECT attack).' },
+                    { t: '', v: '' },
+                    { t: 'green bold', v: '[STAGE 2: FIREWALL DEPLOYMENT]'},
+                    { t: '', v: 'Drop all inbound packets from malicious IP at local gateway.' },
+                    { t: 'cyan', v: 'Command format: block 192.168.4.12' },
+                    { t: 'amber', v: 'Enter firewall mitigation command:' }
+                ]);
+            } else {
+                printTerminalLines([
+                    { t: 'red', v: 'ERROR: Scan logs again. Locate the SQL Injection Union IP.' },
+                    { t: 'amber', v: 'Command format: detect <IP>' }
+                ]);
+            }
+        } else if (gameStateStep === 1) {
+            if (cmd === 'block 192.168.4.12') {
+                gameStateStep = 2;
+                printTerminalLines([
+                    { t: 'green bold', v: '✓ SUCCESS: Firewall configuration updated.' },
+                    { t: 'cyan', v: 'IP 192.168.4.12 has been dropped at core boundary routers.' },
+                    { t: '', v: '' },
+                    { t: 'green bold', v: '[STAGE 3: APPLICATION CODE-LEVEL HARDENING]'},
+                    { t: '', v: 'Block exfiltration vectors permanently. Select SQL Injection patch:' },
+                    { t: 'cyan', v: '  [1] Filter out single quote (\') characters from user input strings' },
+                    { t: 'cyan', v: '  [2] Implement Parameterized SQL Queries (Prepared Statements)' },
+                    { t: 'cyan', v: '  [3] Suppress web application database error messages' },
+                    { t: '', v: '' },
+                    { t: 'amber', v: 'Enter option number (1-3):' }
+                ]);
+            } else {
+                printTerminalLines([
+                    { t: 'red', v: 'ERROR: Threat IP is bypassing gateway. Block the IP!' },
+                    { t: 'amber', v: 'Command format: block 192.168.4.12' }
+                ]);
+            }
+        } else if (gameStateStep === 2) {
+            if (cmd === '2') {
+                systemState = 'celebration';
+                printTerminalLines([
+                    { t: 'green bold', v: '✓ SUCCESS: SQL Parameterization successfully compiled.' },
+                    { t: 'green bold', v: '✓ BREACH PREVENTED. DATABASE INTEGRITY RESTORED.' },
+                    { t: '', v: '' },
+                    { t: 'green bold', v: ' _________________________________________' },
+                    { t: 'green bold', v: '|                                         |' },
+                    { t: 'green bold', v: '|      [ SECOPS LEVEL 1 CERTIFIED ]       |' },
+                    { t: 'green bold', v: '|      - INCIDENT COMMAND DEFENDER -      |' },
+                    { t: 'green bold', v: '|  Verified: subash.dev // ' + new Date().toISOString().split('T')[0] + '    |' },
+                    { t: 'green bold', v: '\\________________________________________/' },
+                    { t: '', v: '' },
+                    { t: 'green bold', v: 'Congratulations, defender! You successfully protected node APEX-DB-01.' },
+                    { t: 'cyan', v: 'Type help to explore other commands.' }
+                ]);
+                setTimeout(() => { systemState = 'secure'; }, 2500);
+                currentTerminalMode = 'normal';
+                gameStateStep = 0;
+            } else if (cmd === '1' || cmd === '3') {
+                printTerminalLines([
+                    { t: 'red', v: 'ERROR: That mitigation mitigates the symptom but fails to fix SQLi.' },
+                    { t: 'amber', v: 'Choose a different option (1-3):' }
+                ]);
+            } else {
+                printTerminalLines([{ t: 'red', v: 'Choose 1, 2, or 3:' }]);
+            }
+        }
+    }
+
     termInput.addEventListener('keydown',e=>{
         if(e.key!==''+'Enter')return;
-        const cmd=termInput.value.trim().toLowerCase();
+        const rawInput=termInput.value.trim();
+        const cmd=rawInput.toLowerCase();
         termInput.value='';
-        if(!cmd)return;
+        if(!rawInput)return;
+
         // Echo command
         const echoLine=document.createElement('div');echoLine.className='term-line';
-        echoLine.innerHTML=`<span class="term-prompt">visitor@subash:~$ </span><span class="term-cmd">${cmd}</span>`;
+        echoLine.innerHTML=`<span class="term-prompt">visitor@subash:~$ </span><span class="term-cmd">${rawInput}</span>`;
         termBody.appendChild(echoLine);
 
-        if(cmd==='clear'){termBody.innerHTML='';return;}
-
-        const handler=commands[cmd];
-        if(handler){
-            handler().forEach(line=>{
-                const div=document.createElement('div');div.className='term-line';
-                div.innerHTML=`<span class="term-output ${line.t}">${line.v}</span>`;
-                termBody.appendChild(div);
-            });
-        } else {
-            const div=document.createElement('div');div.className='term-line';
-            div.innerHTML=`<span class="term-output red">bash: ${cmd}: command not found. Type <span style="color:var(--cyan)">help</span> for available commands.</span>`;
-            termBody.appendChild(div);
+        if(cmd==='clear'){termBody.innerHTML='';currentTerminalMode='normal';systemState='secure';return;}
+        if(cmd==='abort'||cmd==='exit') {
+            printTerminalLines([{t:'amber',v:'Session aborted. Returning to normal console.'}]);
+            currentTerminalMode='normal';
+            systemState='secure';
+            return;
         }
-        const spacer=document.createElement('div');spacer.className='term-line';spacer.innerHTML='&nbsp;';termBody.appendChild(spacer);
+
+        if (currentTerminalMode === 'ai-audit') {
+            handleAiAuditInput(cmd);
+        } else if (currentTerminalMode === 'cyber-range') {
+            handleCyberRangeInput(cmd);
+        } else {
+            const handler=commands[cmd];
+            if(handler){
+                printTerminalLines(handler());
+            } else {
+                const div=document.createElement('div');div.className='term-line';
+                div.innerHTML=`<span class="term-output red">bash: ${cmd}: command not found. Type <span style="color:var(--cyan)">help</span> for available commands.</span>`;
+                termBody.appendChild(div);
+                const spacer=document.createElement('div');spacer.className='term-line';spacer.innerHTML='&nbsp;';termBody.appendChild(spacer);
+            }
+        }
         termBody.scrollTop=termBody.scrollHeight;
     });
 
