@@ -249,8 +249,27 @@
             transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
         }
         #loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loader-logo { font-family: var(--mono); font-size: 2.2rem; font-weight: 700; color: var(--green); margin-bottom: 1rem; letter-spacing: 3px; text-shadow: 0 0 10px var(--green-glow); }
-        .loader-console { font-family: var(--mono); font-size: 0.75rem; color: var(--green); max-width: 450px; width: 90%; text-align: left; line-height: 1.6; height: 120px; overflow-y: auto; margin-bottom: 1.5rem; border: 1px solid var(--border); padding: 0.75rem; border-radius: 6px; background: rgba(0,0,0,0.3); }
+        .loader-wireframe { width: 120px; height: 120px; perspective: 500px; margin-bottom: 2rem; }
+        .wireframe-shape {
+            width: 100%; height: 100%; position: relative; transform-style: preserve-3d;
+            animation: wireframeSpin 4s linear infinite;
+        }
+        .wireframe-face {
+            position: absolute; width: 100%; height: 100%;
+            border: 1.5px solid var(--green); background: transparent;
+            box-shadow: 0 0 8px var(--green-glow), inset 0 0 8px rgba(0,255,136,0.03);
+        }
+        .wireframe-face.front  { transform: translateZ(60px); }
+        .wireframe-face.back   { transform: translateZ(-60px); }
+        .wireframe-face.left   { transform: rotateY(-90deg) translateZ(60px); }
+        .wireframe-face.right  { transform: rotateY(90deg) translateZ(60px); }
+        .wireframe-face.top    { transform: rotateX(90deg) translateZ(60px); }
+        .wireframe-face.bottom { transform: rotateX(-90deg) translateZ(60px); }
+        @keyframes wireframeSpin {
+            0%   { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+            100% { transform: rotateX(360deg) rotateY(540deg) rotateZ(180deg); }
+        }
+        .loader-logo { font-family: var(--mono); font-size: 2.2rem; font-weight: 700; color: var(--green); margin-bottom: 1.5rem; letter-spacing: 3px; text-shadow: 0 0 10px var(--green-glow); }
         .loader-bar { width: 250px; height: 3px; background: var(--border); border-radius: 3px; overflow: hidden; }
         .loader-bar-inner { height: 100%; width: 0%; background: var(--green); border-radius: 3px; transition: width 0.3s ease; box-shadow: 0 0 8px var(--green-glow); }
         .loader-msg { font-family: var(--mono); font-size: 0.65rem; color: var(--text-secondary); margin-top: 0.75rem; letter-spacing: 1px; }
@@ -437,6 +456,7 @@
         .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
         .tag { font-family: var(--mono); font-size: 0.65rem; padding: 0.25rem 0.6rem; border-radius: 5px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--text-muted); transition: all 0.2s ease; }
         .skill-card:hover .tag { border-color: var(--green-border); color: var(--text-secondary); }
+        .tool-badge:hover { border-color: var(--green-border); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.3), 0 0 12px var(--green-glow); }
 
         /* ===== RADAR CHART ===== */
         .radar-container { display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -710,10 +730,19 @@
 
     <!-- Loader -->
     <div id="loader">
+        <div class="loader-wireframe">
+            <div class="wireframe-shape">
+                <div class="wireframe-face front"></div>
+                <div class="wireframe-face back"></div>
+                <div class="wireframe-face left"></div>
+                <div class="wireframe-face right"></div>
+                <div class="wireframe-face top"></div>
+                <div class="wireframe-face bottom"></div>
+            </div>
+        </div>
         <div class="loader-logo">SUBASH://</div>
-        <div class="loader-console" id="loaderConsole"></div>
         <div class="loader-bar"><div class="loader-bar-inner" id="loaderBarInner"></div></div>
-        <div class="loader-msg" id="loaderMsg">INITIALIZING PROTOCOL...</div>
+        <div class="loader-msg" id="loaderMsg">INITIALIZING SECURE SESSION...</div>
     </div>
 
     <!-- Background -->
@@ -789,11 +818,11 @@
         <!-- Hero -->
         <section id="hero">
             <div class="hero-inner">
-                <div class="hero-badge"><span class="pulse"></span> Available for Internships</div>
+                <div class="hero-badge"><span class="pulse"></span> Junior Cybersecurity Analyst @ CryptoGen</div>
                 <div id="time-greeting" style="font-family: var(--mono); font-size: 0.85rem; color: var(--cyan); margin-bottom: 0.5rem; letter-spacing: 2px; text-transform: uppercase;"></div>
                 <h1 class="hero-name"><span class="accent">Subash</span><br>Uduwaka</h1>
                 <div class="hero-terminal"><span class="prompt">→ </span><span id="typed"></span><span class="cursor-blink"></span></div>
-                <p class="hero-bio">A <strong>cybersecurity student</strong> at Edith Cowan University with hands-on experience in <strong>threat hunting, ethical hacking, and network defense</strong>.</p>
+                <p class="hero-bio">A <strong>cybersecurity professional</strong> and BSc graduate from Edith Cowan University, currently working as a <strong>Junior Cybersecurity Analyst at CryptoGen</strong> — specializing in <strong>threat detection, SOC operations, and incident response</strong>.</p>
                 <div class="hero-actions">
                     <a href="#projects" class="btn btn-fill magnetic">View Projects ↓</a>
                     <a href="Subash_Uduwaka_CV1.pdf" class="btn btn-ghost magnetic" download>Download CV ↗</a>
@@ -854,7 +883,7 @@
                 <div class="about-content">
                     <p class="fade-up">Skilled in assessing <strong>system security postures</strong>, identifying <strong>access control misconfigurations</strong>, and automating compliance audits against frameworks like <em>SOC2</em>, <em>PCI-DSS</em>, <em>GDPR</em>, and <em>HIPAA</em>.</p>
                     <p class="fade-up">Supported by a comprehensive understanding of core information security principles and network security fundamentals from my degree at <strong>Edith Cowan University</strong>.</p>
-                    <p class="fade-up">Pursuing BSc in Cyber Security (expected Feb 2026), eager to apply practical threat mitigation and incident response skills in enterprise systems.</p>
+                    <p class="fade-up">BSc in Cyber Security graduate (2026) from Edith Cowan University. Currently applying threat mitigation and incident response skills as a Junior Cybersecurity Analyst at <strong>CryptoGen</strong>, one of Sri Lanka's leading cybersecurity firms.</p>
                     <div class="stats-row fade-up">
                         <div class="stat-box"><div class="stat-val" data-target="11">0</div><div class="stat-lbl">Repos</div></div>
                         <div class="stat-box"><div class="stat-val" data-target="200">0</div><div class="stat-lbl">Sec Checks</div></div>
@@ -915,9 +944,46 @@
                         <div class="skill-tags"><span class="tag">Kali Linux</span><span class="tag">Ubuntu</span><span class="tag">Windows Server</span><span class="tag">macOS</span><span class="tag">WSL</span></div>
                     </div>
                     <div class="skill-card tilt-card fade-up delay-1">
-                        <div class="skill-header"><div class="skill-icon-box">☁️</div><div class="skill-name">SecOps & Infra</div></div>
-                        <div class="skill-progress-bar"><div class="skill-progress-fill" data-percent="85"></div></div>
-                        <div class="skill-tags"><span class="tag">AWS</span><span class="tag">GCP</span><span class="tag">Azure</span><span class="tag">Docker</span><span class="tag">Git</span><span class="tag">CI/CD</span></div>
+                        <div class="skill-header"><div class="skill-icon-box">🔎</div><div class="skill-name">SOC & SecOps</div></div>
+                        <div class="skill-progress-bar"><div class="skill-progress-fill" data-percent="88"></div></div>
+                        <div class="skill-tags"><span class="tag">Google Chronicle</span><span class="tag">FortiSIEM</span><span class="tag">CrowdStrike EDR</span><span class="tag">CrowdStrike XDR</span><span class="tag">Threat Hunting</span><span class="tag">Incident Response</span></div>
+                    </div>
+                </div>
+
+                <!-- Security Tools Showcase -->
+                <div class="tools-showcase fade-up" style="margin-top: 3rem;">
+                    <div class="tools-title" style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.5rem; text-align: center;">// SECURITY OPERATIONS STACK</div>
+                    <div class="tools-grid" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;">
+                        <div class="tool-badge" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem 1.2rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); transition: all 0.3s ease; min-width: 110px;">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="var(--cyan)" stroke-width="1.5" fill="rgba(0,212,255,0.05)"/><path d="M10 16l4 4 8-8" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span style="font-family: var(--mono); font-size: 0.68rem; color: var(--text); font-weight: 600;">Chronicle</span>
+                            <span style="font-family: var(--mono); font-size: 0.5rem; color: var(--text-muted);">Google SIEM</span>
+                        </div>
+                        <div class="tool-badge" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem 1.2rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); transition: all 0.3s ease; min-width: 110px;">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="24" height="24" rx="4" stroke="#ff4444" stroke-width="1.5" fill="rgba(255,68,68,0.05)"/><path d="M16 10v6l4 2" stroke="#ff4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="16" r="7" stroke="#ff4444" stroke-width="1" opacity="0.4"/></svg>
+                            <span style="font-family: var(--mono); font-size: 0.68rem; color: var(--text); font-weight: 600;">FortiSIEM</span>
+                            <span style="font-family: var(--mono); font-size: 0.5rem; color: var(--text-muted);">Fortinet</span>
+                        </div>
+                        <div class="tool-badge" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem 1.2rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); transition: all 0.3s ease; min-width: 110px;">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 4L4 10v12l12 6 12-6V10L16 4z" stroke="#ff6644" stroke-width="1.5" fill="rgba(255,102,68,0.05)"/><path d="M16 10l-6 3v6l6 3 6-3v-6l-6-3z" stroke="#ff6644" stroke-width="1" opacity="0.6"/><circle cx="16" cy="16" r="2" fill="#ff6644"/></svg>
+                            <span style="font-family: var(--mono); font-size: 0.68rem; color: var(--text); font-weight: 600;">CrowdStrike</span>
+                            <span style="font-family: var(--mono); font-size: 0.5rem; color: var(--text-muted);">EDR / XDR</span>
+                        </div>
+                        <div class="tool-badge" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem 1.2rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); transition: all 0.3s ease; min-width: 110px;">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 4l10 5.5v13L16 28 6 22.5v-13L16 4z" stroke="var(--green)" stroke-width="1.5" fill="rgba(0,255,136,0.05)"/><path d="M16 12v8M12 16h8" stroke="var(--green)" stroke-width="2" stroke-linecap="round"/></svg>
+                            <span style="font-family: var(--mono); font-size: 0.68rem; color: var(--text); font-weight: 600;">Wireshark</span>
+                            <span style="font-family: var(--mono); font-size: 0.5rem; color: var(--text-muted);">Packet Analysis</span>
+                        </div>
+                        <div class="tool-badge" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem 1.2rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); transition: all 0.3s ease; min-width: 110px;">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="var(--purple)" stroke-width="1.5" fill="rgba(168,85,247,0.05)"/><path d="M11 16h10M16 11v10" stroke="var(--purple)" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="16" r="3" stroke="var(--purple)" stroke-width="1" opacity="0.5"/></svg>
+                            <span style="font-family: var(--mono); font-size: 0.68rem; color: var(--text); font-weight: 600;">Nmap</span>
+                            <span style="font-family: var(--mono); font-size: 0.5rem; color: var(--text-muted);">Recon & Scan</span>
+                        </div>
+                        <div class="tool-badge" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem 1.2rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); transition: all 0.3s ease; min-width: 110px;">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="5" y="8" width="22" height="16" rx="3" stroke="var(--amber)" stroke-width="1.5" fill="rgba(245,158,11,0.05)"/><path d="M10 14h12M10 18h8" stroke="var(--amber)" stroke-width="1.5" stroke-linecap="round"/></svg>
+                            <span style="font-family: var(--mono); font-size: 0.68rem; color: var(--text); font-weight: 600;">Metasploit</span>
+                            <span style="font-family: var(--mono); font-size: 0.5rem; color: var(--text-muted);">Exploitation</span>
+                        </div>
                     </div>
                 </div>
                 <div class="radar-container fade-up">
@@ -1001,7 +1067,8 @@
             <h2 class="section-heading fade-up">Experience & <em>Education</em></h2>
             <p class="section-sub fade-up">My path through academia, industry, and certifications.</p>
             <div class="timeline">
-                <div class="tl-item fade-up"><div class="tl-dot"></div><div class="tl-cat">Education</div><div class="tl-title">BSc Cyber Security</div><div class="tl-org">Edith Cowan University — Sri Lanka</div><div class="tl-date">Expected: February 2026</div><div class="tl-tags"><span class="tl-tag">Ethical Hacking</span><span class="tl-tag">Forensics</span><span class="tl-tag">Enterprise Security</span><span class="tl-tag">Network Security</span><span class="tl-tag">IoT/OT</span><span class="tl-tag">Cryptography</span><span class="tl-tag">Reverse Engineering</span></div></div>
+                <div class="tl-item fade-up"><div class="tl-dot" style="background: var(--green); box-shadow: 0 0 12px var(--green-glow);"></div><div class="tl-cat" style="color: var(--green);">Current Role</div><div class="tl-title">Junior Cybersecurity Analyst</div><div class="tl-org">CryptoGen — Colombo, Sri Lanka</div><div class="tl-date">December 2025 — Present</div><div class="tl-body"><ul><li>24/7 SOC monitoring using <strong style="color:var(--cyan)">Google Chronicle SIEM</strong> and <strong style="color:var(--cyan)">FortiSIEM</strong></li><li>Endpoint threat detection & response with <strong style="color:var(--cyan)">CrowdStrike Falcon EDR/XDR</strong></li><li>Security incident triage, investigation, and escalation</li><li>Threat hunting across enterprise networks and cloud environments</li></ul></div><div class="tl-tags"><span class="tl-tag">Chronicle</span><span class="tl-tag">FortiSIEM</span><span class="tl-tag">CrowdStrike</span><span class="tl-tag">SOC</span><span class="tl-tag">Incident Response</span></div></div>
+                <div class="tl-item fade-up"><div class="tl-dot"></div><div class="tl-cat">Education</div><div class="tl-title">BSc Cyber Security</div><div class="tl-org">Edith Cowan University — Sri Lanka</div><div class="tl-date">Graduated: February 2026</div><div class="tl-tags"><span class="tl-tag">Ethical Hacking</span><span class="tl-tag">Forensics</span><span class="tl-tag">Enterprise Security</span><span class="tl-tag">Network Security</span><span class="tl-tag">IoT/OT</span><span class="tl-tag">Cryptography</span><span class="tl-tag">Reverse Engineering</span></div></div>
                 <div class="tl-item fade-up"><div class="tl-dot"></div><div class="tl-cat">Education</div><div class="tl-title">Diploma of Science (Computing/IT)</div><div class="tl-org">Edith Cowan College — ACBT</div><div class="tl-date">Completed: October 2023</div><div class="tl-tags"><span class="tl-tag">Systems Analysis</span><span class="tl-tag">Programming</span><span class="tl-tag">Computer Security</span><span class="tl-tag">Database Design</span></div></div>
                 <div class="tl-item fade-up"><div class="tl-dot cyan"></div><div class="tl-cat">Experience</div><div class="tl-title">Technical Systems & Diagnostics Technician</div><div class="tl-org">Uduwaka Motors — Nawalapitiya</div><div class="tl-date">2020 · Part-Time</div><div class="tl-body"><ul><li>Root cause analysis on embedded systems (OBD-II, CAN, KWP2000)</li><li>Real-time data stream analysis for anomaly detection</li><li>ECU reprogramming & system integrity management</li></ul></div></div>
                 <div class="tl-item fade-up"><div class="tl-dot purple"></div><div class="tl-cat">Certifications</div><div class="tl-title">Professional Certifications</div><div class="tl-date">2017 — 2022</div><div class="tl-body"><ul><li><strong style="color:var(--green)">IELTS 6.0</strong> — British Council (2022)</li><li><strong style="color:var(--green)">SLCCL</strong> — NAITA (2018)</li><li><strong style="color:var(--green)">Auto Electrical</strong> — OBD Academy</li><li><strong style="color:var(--green)">Computer Studies</strong> — MerCom (2017)</li></ul></div></div>
@@ -1012,7 +1079,7 @@
         <section id="contact">
             <div class="section-tag fade-up">Contact</div>
             <h2 class="section-heading fade-up">Let's <em>Connect</em></h2>
-            <p class="section-sub fade-up">Open for cybersecurity internships and collaborative projects.</p>
+            <p class="section-sub fade-up">Open for cybersecurity collaborations and new opportunities.</p>
             <div class="contact-layout">
                 <div class="contact-text fade-up">
                     <h3>Ready to work together?</h3>
@@ -2356,27 +2423,21 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
     // ========== SYSTEM BOOT LOADER ==========
     document.getElementById('year').textContent=new Date().getFullYear();
     
-    const bootLogs = [
-        "SECURE CONNECTION ESTABLISHED (PORT 443)",
-        "DECRYPTING SECURITY SHIELD PORTFOLIO...",
-        "STATUS: STANDBY — INJECTING CRYPTO KEYS",
-        "BYPASSING SECURE ENTERPRISE FIREWALL...",
-        "AUTHENTICATING VISITOR CLIENT IP...",
-        "LOADING SYSTEM REFACTOR MODULES...",
-        "ESTABLISHING SECURE SSH TUNNEL...",
-        "SCANNING NETWORK BOUNDARIES & THREAT VECTORS...",
-        "INTEGRITY AUDIT: PASS. UPTIME: SECURE.",
-        "ACCESS GRANTED. WELCOME, INVESTIGATOR."
-    ];
-
-    const loaderConsole = document.getElementById('loaderConsole');
     const loaderBarInner = document.getElementById('loaderBarInner');
     const loaderMsg = document.getElementById('loaderMsg');
     const loader = document.getElementById('loader');
 
-    let logIdx = 0;
+    const bootMessages = [
+        "ESTABLISHING ENCRYPTED CHANNEL...",
+        "AUTHENTICATING CREDENTIALS...",
+        "LOADING SECURITY MODULES...",
+        "DECRYPTING PORTFOLIO DATA...",
+        "ACCESS GRANTED."
+    ];
+
+    let bootStep = 0;
     function runBootLoader() {
-        if (!loaderConsole || !loaderBarInner || !loaderMsg) {
+        if (!loaderBarInner || !loaderMsg) {
             setTimeout(() => { 
                 if(loader) loader.classList.add('done'); 
                 document.documentElement.classList.remove('loading');
@@ -2387,32 +2448,25 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
             return;
         }
         
-        if (logIdx < bootLogs.length) {
-            const line = document.createElement('div');
-            line.style.marginBottom = '4px';
-            line.innerHTML = `<span style="color:var(--green)">[OK]</span> ${bootLogs[logIdx]}`;
-            loaderConsole.appendChild(line);
-            loaderConsole.scrollTop = loaderConsole.scrollHeight;
-
-            const progress = Math.round(((logIdx + 1) / bootLogs.length) * 100);
+        if (bootStep < bootMessages.length) {
+            const progress = Math.round(((bootStep + 1) / bootMessages.length) * 100);
             loaderBarInner.style.width = progress + '%';
-            loaderMsg.textContent = bootLogs[logIdx];
-
-            logIdx++;
-            setTimeout(runBootLoader, 120 + Math.random() * 180);
+            loaderMsg.textContent = bootMessages[bootStep];
+            bootStep++;
+            setTimeout(runBootLoader, 400 + Math.random() * 300);
         } else {
-            loaderMsg.textContent = "DECRYPTION COMPLETE. INITIALIZING SESSIONS...";
+            loaderMsg.textContent = "SESSION INITIALIZED.";
             setTimeout(() => {
                 loader.classList.add('done');
                 document.documentElement.classList.remove('loading');
                 document.body.classList.remove('loading');
                 window.scrollTo(0, 0);
                 setTimeout(triggerHeroEntrance, 400);
-            }, 600);
+            }, 500);
         }
     }
     
-    setTimeout(runBootLoader, 300);
+    setTimeout(runBootLoader, 500);
     </script>
 </body>
 </html>
