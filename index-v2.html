@@ -86,6 +86,113 @@
             --terminal-border: var(--border);
         }
 
+        /* ===== CYBERSECURITY THEME VARIANTS ===== */
+        :root[data-theme="bloodmoon"] {
+            --bg: #0f0606; --bg-card: #1a0a0a; --bg-card-hover: #221010; --bg-elevated: #2a1414;
+            --border: #3d1c1c; --border-hover: #5a2a2a;
+            --green: #ff4444; --green-soft: #ff6b6b; --green-muted: #cc3333;
+            --green-bg: rgba(255, 68, 68, 0.06); --green-border: rgba(255, 68, 68, 0.12); --green-glow: rgba(255, 68, 68, 0.25);
+            --cyan: #ff8844; --cyan-bg: rgba(255, 136, 68, 0.06); --cyan-border: rgba(255, 136, 68, 0.12);
+            --purple: #ff6688; --purple-bg: rgba(255, 102, 136, 0.06); --purple-border: rgba(255, 102, 136, 0.12);
+            --amber: #ff9944; --red: #ff2222;
+            --text: #f0d8d8; --text-secondary: #aa8888; --text-muted: #6a4444;
+            --glass-bg: rgba(15, 6, 6, 0.6);
+            --terminal-bg: #120808; --terminal-bg-glass: rgba(18, 8, 8, 0.45);
+            --terminal-bar-bg: #1a0c0c; --terminal-bar-bg-glass: rgba(26, 12, 12, 0.55);
+            --terminal-text: #f0d8d8; --terminal-border: var(--border);
+        }
+        :root[data-theme="deepblue"] {
+            --bg: #060a0f; --bg-card: #0a1220; --bg-card-hover: #101a2a; --bg-elevated: #142030;
+            --border: #1c2e45; --border-hover: #2a4060;
+            --green: #4488ff; --green-soft: #6aa3ff; --green-muted: #3366cc;
+            --green-bg: rgba(68, 136, 255, 0.06); --green-border: rgba(68, 136, 255, 0.12); --green-glow: rgba(68, 136, 255, 0.25);
+            --cyan: #44ccff; --cyan-bg: rgba(68, 204, 255, 0.06); --cyan-border: rgba(68, 204, 255, 0.12);
+            --purple: #6688ff; --purple-bg: rgba(102, 136, 255, 0.06); --purple-border: rgba(102, 136, 255, 0.12);
+            --amber: #44aaff; --red: #ff4466;
+            --text: #d8e4f0; --text-secondary: #8899bb; --text-muted: #445570;
+            --glass-bg: rgba(6, 10, 15, 0.6);
+            --terminal-bg: #080e18; --terminal-bg-glass: rgba(8, 14, 24, 0.45);
+            --terminal-bar-bg: #0c1420; --terminal-bar-bg-glass: rgba(12, 20, 32, 0.55);
+            --terminal-text: #d8e4f0; --terminal-border: var(--border);
+        }
+        :root[data-theme="neonpurple"] {
+            --bg: #0a060f; --bg-card: #14101a; --bg-card-hover: #1c1624; --bg-elevated: #221c30;
+            --border: #2e1c45; --border-hover: #442a66;
+            --green: #b44aff; --green-soft: #c77dff; --green-muted: #8833cc;
+            --green-bg: rgba(180, 74, 255, 0.06); --green-border: rgba(180, 74, 255, 0.12); --green-glow: rgba(180, 74, 255, 0.25);
+            --cyan: #e066ff; --cyan-bg: rgba(224, 102, 255, 0.06); --cyan-border: rgba(224, 102, 255, 0.12);
+            --purple: #ff66aa; --purple-bg: rgba(255, 102, 170, 0.06); --purple-border: rgba(255, 102, 170, 0.12);
+            --amber: #cc88ff; --red: #ff44aa;
+            --text: #e4d8f0; --text-secondary: #9988aa; --text-muted: #5a4470;
+            --glass-bg: rgba(10, 6, 15, 0.6);
+            --terminal-bg: #0e0818; --terminal-bg-glass: rgba(14, 8, 24, 0.45);
+            --terminal-bar-bg: #140c20; --terminal-bar-bg-glass: rgba(20, 12, 32, 0.55);
+            --terminal-text: #e4d8f0; --terminal-border: var(--border);
+        }
+        :root[data-theme="amberalert"] {
+            --bg: #0f0c06; --bg-card: #1a1508; --bg-card-hover: #221c10; --bg-elevated: #2a2214;
+            --border: #3d3018; --border-hover: #5a4828;
+            --green: #ffaa00; --green-soft: #ffcc44; --green-muted: #cc8800;
+            --green-bg: rgba(255, 170, 0, 0.06); --green-border: rgba(255, 170, 0, 0.12); --green-glow: rgba(255, 170, 0, 0.25);
+            --cyan: #ffcc00; --cyan-bg: rgba(255, 204, 0, 0.06); --cyan-border: rgba(255, 204, 0, 0.12);
+            --purple: #ff8844; --purple-bg: rgba(255, 136, 68, 0.06); --purple-border: rgba(255, 136, 68, 0.12);
+            --amber: #ffdd44; --red: #ff6622;
+            --text: #f0e8d8; --text-secondary: #aa9977; --text-muted: #6a5a40;
+            --glass-bg: rgba(15, 12, 6, 0.6);
+            --terminal-bg: #120e08; --terminal-bg-glass: rgba(18, 14, 8, 0.45);
+            --terminal-bar-bg: #1a1408; --terminal-bar-bg-glass: rgba(26, 20, 8, 0.55);
+            --terminal-text: #f0e8d8; --terminal-border: var(--border);
+        }
+
+        /* ===== THEME PICKER ===== */
+        #theme-picker-wrapper { position: relative; display: inline-block; }
+        #theme-picker-btn {
+            background: none; border: 1px solid var(--border); border-radius: 6px;
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            cursor: none; color: var(--text-secondary); transition: all 0.2s; outline: none;
+            margin-right: 0.5rem; font-size: 0.9rem;
+        }
+        #theme-picker-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+        #theme-picker-panel {
+            position: absolute; top: calc(100% + 12px); right: 0; z-index: 10000;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+            padding: 0.75rem; min-width: 200px;
+            opacity: 0; visibility: hidden; transform: translateY(-8px) scale(0.96);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        }
+        #theme-picker-panel.open {
+            opacity: 1; visibility: visible; transform: translateY(0) scale(1);
+        }
+        .theme-picker-title {
+            font-family: var(--mono); font-size: 0.6rem; color: var(--text-muted);
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.5rem;
+            padding-bottom: 0.4rem; border-bottom: 1px solid var(--border);
+        }
+        .theme-option {
+            display: flex; align-items: center; gap: 0.6rem; padding: 0.45rem 0.5rem;
+            border-radius: 6px; cursor: none; transition: all 0.15s ease; border: none;
+            background: none; width: 100%; text-align: left; outline: none;
+        }
+        .theme-option:hover { background: var(--green-bg); }
+        .theme-option.active { background: var(--green-bg); border: 1px solid var(--green-border); }
+        .theme-swatch {
+            width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.15);
+            flex-shrink: 0; transition: all 0.2s;
+        }
+        .theme-option:hover .theme-swatch { border-color: rgba(255,255,255,0.3); transform: scale(1.1); }
+        .theme-option.active .theme-swatch { border-color: var(--green); box-shadow: 0 0 8px var(--green-glow); }
+        .theme-label {
+            font-family: var(--mono); font-size: 0.72rem; color: var(--text-secondary);
+            font-weight: 500; transition: color 0.15s;
+        }
+        .theme-option:hover .theme-label, .theme-option.active .theme-label { color: var(--text); }
+        .theme-desc {
+            font-family: var(--mono); font-size: 0.55rem; color: var(--text-muted);
+            margin-left: auto; white-space: nowrap;
+        }
+
         html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--green-muted) var(--bg); }
         html.loading, body.loading { overflow: hidden !important; height: 100vh !important; }
         html::-webkit-scrollbar { width: 5px; }
@@ -494,8 +601,6 @@
         .heatmap-card:hover { border-color: var(--green-border); }
 
         /* ===== THEME & AUDIO TOGGLES ===== */
-        #theme-toggle { background: none; border: 1px solid var(--border); border-radius: 6px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: none; color: var(--text-secondary); transition: all 0.2s; outline: none; margin-right: 0.5rem; font-size: 0.9rem; }
-        #theme-toggle:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
 
         #audio-toggle { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0.75rem; cursor: none; color: var(--text-secondary); font-family: var(--mono); font-size: 0.7rem; transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem; outline: none; margin-right: 0.75rem; }
         #audio-toggle:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
@@ -547,13 +652,11 @@
             background: rgba(10, 15, 26, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--border); border-left: none;
             color: var(--green); border-radius: 0 8px 8px 0;
-            padding: 1.25rem 0.6rem; font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
-            display: flex; align-items: center; justify-content: center;
+            padding: 0.6rem 0.45rem; font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
             cursor: none; outline: none; transition: all 0.3s ease;
             box-shadow: 4px 0 20px rgba(0,0,0,0.3), 0 0 10px rgba(0,255,136,0.05);
-            writing-mode: vertical-lr;
-            text-orientation: mixed;
-            letter-spacing: 1px;
+            line-height: 1.25; letter-spacing: 2px; text-align: center;
         }
         #threat-feed-tab:hover {
             color: var(--bg); background: var(--green); border-color: var(--green);
@@ -645,7 +748,37 @@
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <div style="display: flex; align-items: center;">
-                <button id="theme-toggle" class="magnetic" aria-label="Toggle Theme">🌙</button>
+                <div id="theme-picker-wrapper">
+                    <button id="theme-picker-btn" class="magnetic" aria-label="Switch Theme">🎨</button>
+                    <div id="theme-picker-panel">
+                        <div class="theme-picker-title">🔒 Select Theme</div>
+                        <button class="theme-option active" data-theme="phantom" onclick="setTheme('phantom')">
+                            <span class="theme-swatch" style="background: #00ff88;"></span>
+                            <span class="theme-label">Phantom</span>
+                            <span class="theme-desc">Stealth</span>
+                        </button>
+                        <button class="theme-option" data-theme="bloodmoon" onclick="setTheme('bloodmoon')">
+                            <span class="theme-swatch" style="background: #ff4444;"></span>
+                            <span class="theme-label">Blood Moon</span>
+                            <span class="theme-desc">Red Team</span>
+                        </button>
+                        <button class="theme-option" data-theme="deepblue" onclick="setTheme('deepblue')">
+                            <span class="theme-swatch" style="background: #4488ff;"></span>
+                            <span class="theme-label">Deep Blue</span>
+                            <span class="theme-desc">Blue Team</span>
+                        </button>
+                        <button class="theme-option" data-theme="neonpurple" onclick="setTheme('neonpurple')">
+                            <span class="theme-swatch" style="background: #b44aff;"></span>
+                            <span class="theme-label">Neon Purple</span>
+                            <span class="theme-desc">RE / Malware</span>
+                        </button>
+                        <button class="theme-option" data-theme="amberalert" onclick="setTheme('amberalert')">
+                            <span class="theme-swatch" style="background: #ffaa00;"></span>
+                            <span class="theme-label">Amber Alert</span>
+                            <span class="theme-desc">SIEM</span>
+                        </button>
+                    </div>
+                </div>
                 <button id="audio-toggle" class="magnetic" aria-label="Toggle Sound">
                     <span id="audio-icon">🔇</span> <span id="audio-status">SOUND: OFF</span>
                 </button>
@@ -921,7 +1054,7 @@
     <button id="terminal-fab" class="magnetic" aria-label="Toggle Terminal" style="opacity: 0; transform: translateY(20px);">&gt;_</button>
 
     <!-- Floating Threat Feed Tab -->
-    <button id="threat-feed-tab" class="magnetic" aria-label="Open Threat Feed" style="opacity: 0; transform: translateY(-50%) translateX(-20px);"><span style="display:inline-block; transform: rotate(-90deg) translateX(-2px);">📡 THREAT FEED</span></button>
+    <button id="threat-feed-tab" class="magnetic" aria-label="Open Threat Feed" style="opacity: 0; transform: translateY(-50%) translateX(-20px);">📡<br>F<br>E<br>E<br>D</button>
 
     <!-- Threat Feed Drawer -->
     <div id="threat-feed-drawer">
@@ -1036,23 +1169,12 @@
         }
     };
 
+    // Expose meshes globally for theme switcher
+    window.tk = tk; window.ico = ico; window.octa = octa;
+
     window.updateThreeColors = function(isLight) {
         if (!tk || !ico || !octa) return;
-        if (isLight) {
-            tk.material.color.setHex(0x00a854);
-            tk.material.opacity = 0.08;
-            ico.material.color.setHex(0x008ebd);
-            ico.material.opacity = 0.07;
-            octa.material.color.setHex(0x862cd4);
-            octa.material.opacity = 0.06;
-        } else {
-            tk.material.color.setHex(0x00ff88);
-            tk.material.opacity = 0.035;
-            ico.material.color.setHex(0x00d4ff);
-            ico.material.opacity = 0.03;
-            octa.material.color.setHex(0xa855f7);
-            octa.material.opacity = 0.025;
-        }
+        // Let theme switcher handle colors via setTheme()
         tk.material.needsUpdate = true;
         ico.material.needsUpdate = true;
         octa.material.needsUpdate = true;
@@ -1081,37 +1203,45 @@
         mx+=(tmx-mx)*0.03;my+=(tmy-my)*0.03;
 
         // Color, Opacity & Rotation Speed transitions based on systemState
-        const isLight = document.documentElement.classList.contains('light-mode');
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'phantom';
+        const tc = {
+            phantom:    { tk: 0x00ff88, ico: 0x00d4ff, octa: 0xa855f7 },
+            bloodmoon:  { tk: 0xff4444, ico: 0xff8844, octa: 0xff6688 },
+            deepblue:   { tk: 0x4488ff, ico: 0x44ccff, octa: 0x6688ff },
+            neonpurple: { tk: 0xb44aff, ico: 0xe066ff, octa: 0xff66aa },
+            amberalert: { tk: 0xffaa00, ico: 0xffcc00, octa: 0xff8844 }
+        };
+        const themeC = tc[currentTheme] || tc.phantom;
         let targetColors = {
-            tk: isLight ? 0x00a854 : 0x00ff88,
-            ico: isLight ? 0x008ebd : 0x00d4ff,
-            octa: isLight ? 0x862cd4 : 0xa855f7
+            tk: themeC.tk,
+            ico: themeC.ico,
+            octa: themeC.octa
         };
         let targetOpacities = {
-            tk: isLight ? 0.08 : 0.035,
-            ico: isLight ? 0.07 : 0.030,
-            octa: isLight ? 0.06 : 0.025
+            tk: 0.035,
+            ico: 0.030,
+            octa: 0.025
         };
         let rotSpeedMult = 1.0;
         let scaleMult = 1.0;
 
         if (systemState === 'breach') {
             const flash = Math.sin(t * 12) > 0;
-            const breachColor = flash ? (isLight ? 0xdc2626 : 0xff3344) : (isLight ? 0xd97706 : 0xffaa00);
+            const breachColor = flash ? 0xff3344 : 0xffaa00;
             targetColors = { tk: breachColor, ico: breachColor, octa: breachColor };
-            targetOpacities = { tk: isLight ? 0.26 : 0.16, ico: isLight ? 0.26 : 0.16, octa: isLight ? 0.24 : 0.14 };
+            targetOpacities = { tk: 0.16, ico: 0.16, octa: 0.14 };
             rotSpeedMult = 5.0; // Spin fast!
         } else if (systemState === 'remediating') {
             const pulse = 0.6 + Math.sin(t * 5) * 0.25;
-            const remColor = isLight ? 0xd97706 : 0xff9900;
+            const remColor = 0xff9900;
             targetColors = { tk: remColor, ico: remColor, octa: remColor };
-            targetOpacities = { tk: (isLight ? 0.18 : 0.10) * pulse, ico: (isLight ? 0.16 : 0.09) * pulse, octa: (isLight ? 0.14 : 0.08) * pulse };
+            targetOpacities = { tk: 0.10 * pulse, ico: 0.09 * pulse, octa: 0.08 * pulse };
             rotSpeedMult = 0.4; // Spin very slow
         } else if (systemState === 'celebration') {
             const pulse = 1.0 + Math.sin(t * 15) * 0.12;
-            const celColor = isLight ? 0x00a854 : 0x00ff88;
+            const celColor = 0x00ff88;
             targetColors = { tk: celColor, ico: celColor, octa: celColor };
-            targetOpacities = { tk: isLight ? 0.35 : 0.22, ico: isLight ? 0.32 : 0.20, octa: isLight ? 0.28 : 0.18 };
+            targetOpacities = { tk: 0.22, ico: 0.20, octa: 0.18 };
             rotSpeedMult = 3.5;
             scaleMult = 1.6 * pulse;
         }
@@ -1233,34 +1363,74 @@
     // Fetch news immediately
     fetchCyberNews();
 
-    // ========== THEME TOGGLE (LIGHT/DARK MODE) ==========
-    const themeToggle = document.getElementById('theme-toggle');
-    if (themeToggle) {
-        const applyTheme = (isLight) => {
-            if (isLight) {
-                document.documentElement.classList.add('light-mode');
-                themeToggle.textContent = '☀️';
-            } else {
-                document.documentElement.classList.remove('light-mode');
-                themeToggle.textContent = '🌙';
-            }
-            if (window.updateThreeColors) {
-                window.updateThreeColors(isLight);
-            }
-        };
+    // ========== THEME PICKER (CYBERSECURITY THEMES) ==========
+    const themePickerBtn = document.getElementById('theme-picker-btn');
+    const themePickerPanel = document.getElementById('theme-picker-panel');
 
-        const savedTheme = localStorage.getItem('theme');
-        const systemPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-        const initAsLight = savedTheme === 'light' || (!savedTheme && systemPrefersLight);
-        
-        applyTheme(initAsLight);
+    const themeColors = {
+        phantom:    { tk: 0x00ff88, ico: 0x00d4ff, octa: 0xa855f7 },
+        bloodmoon:  { tk: 0xff4444, ico: 0xff8844, octa: 0xff6688 },
+        deepblue:   { tk: 0x4488ff, ico: 0x44ccff, octa: 0x6688ff },
+        neonpurple: { tk: 0xb44aff, ico: 0xe066ff, octa: 0xff66aa },
+        amberalert: { tk: 0xffaa00, ico: 0xffcc00, octa: 0xff8844 }
+    };
 
-        themeToggle.addEventListener('click', () => {
-            const isLightNow = document.documentElement.classList.contains('light-mode');
-            const nextThemeLight = !isLightNow;
-            localStorage.setItem('theme', nextThemeLight ? 'light' : 'dark');
-            applyTheme(nextThemeLight);
+    window.setTheme = function(themeName) {
+        // Remove light-mode class if present
+        document.documentElement.classList.remove('light-mode');
+
+        // Apply data-theme attribute
+        if (themeName === 'phantom') {
+            document.documentElement.removeAttribute('data-theme');
+        } else {
+            document.documentElement.setAttribute('data-theme', themeName);
+        }
+
+        // Update Three.js colors
+        const colors = themeColors[themeName] || themeColors.phantom;
+        if (window.tk && window.ico && window.octa) {
+            window.tk.material.color.setHex(colors.tk);
+            window.ico.material.color.setHex(colors.ico);
+            window.octa.material.color.setHex(colors.octa);
+            window.tk.material.needsUpdate = true;
+            window.ico.material.needsUpdate = true;
+            window.octa.material.needsUpdate = true;
+        }
+
+        // Update scrollbar color dynamically
+        document.documentElement.style.scrollbarColor = `var(--green-muted) var(--bg)`;
+
+        // Update active state in picker
+        document.querySelectorAll('.theme-option').forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.theme === themeName);
         });
+
+        // Save to localStorage
+        localStorage.setItem('theme', themeName);
+
+        // Close panel
+        if (themePickerPanel) themePickerPanel.classList.remove('open');
+    };
+
+    // Toggle panel open/close
+    if (themePickerBtn && themePickerPanel) {
+        themePickerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            themePickerPanel.classList.toggle('open');
+        });
+
+        // Close panel on outside click
+        document.addEventListener('click', (e) => {
+            if (!themePickerPanel.contains(e.target) && e.target !== themePickerBtn) {
+                themePickerPanel.classList.remove('open');
+            }
+        });
+    }
+
+    // Restore saved theme on load
+    const savedTheme = localStorage.getItem('theme') || 'phantom';
+    if (savedTheme !== 'phantom') {
+        window.setTheme(savedTheme);
     }
 
     // ========== DYNAMIC TIME-BASED GREETING ==========
