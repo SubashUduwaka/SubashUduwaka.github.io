@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404: Access Denied | Subash Uduwaka</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #06090f;
+            --green: #00ff88;
+            --red: #ef4444;
+            --border: #1c2a35;
+        }
+        body {
+            background-color: var(--bg);
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin: 0;
+        }
+        .container {
+            max-width: 650px;
+            width: 90%;
+            border: 1px solid var(--red);
+            border-radius: 12px;
+            background: #0a0e14;
+            box-shadow: 0 0 35px rgba(239, 68, 68, 0.15);
+            overflow: hidden;
+        }
+        .title-bar {
+            background: #0d1218;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot.red { background: var(--red); }
+        .console {
+            padding: 2rem;
+            line-height: 1.8;
+        }
+        .alert-text {
+            color: var(--red);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .cmd-line {
+            margin-bottom: 0.5rem;
+            color: #8899aa;
+        }
+        .btn-bypass {
+            display: inline-block;
+            margin-top: 1.5rem;
+            border: 1px solid var(--green);
+            background: rgba(0, 255, 136, 0.05);
+            color: var(--green);
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .btn-bypass:hover {
+            background: var(--green);
+            color: var(--bg);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-bar">
+            <div class="dot red"></div>
+            <div style="font-size: 0.75rem; color: #8899aa;">firewall_alert.sh</div>
+        </div>
+        <div class="console">
+            <div class="alert-text">[!] ACCESS DENIED: SEGMENTATION FAULT (404)</div>
+            <div class="cmd-line">> Connection Attempt: Rejected</div>
+            <div class="cmd-line">> Target Resource: Not Found on Host server</div>
+            <div class="cmd-line">> Firewall State: Enforcing rules...</div>
+            <div class="cmd-line" id="countdown">> Decrypting alternative route in 5s...</div>
+            <a href="index-v2.html" class="btn-bypass">BYPASS FIREWALL & REROUTE</a>
+        </div>
+    </div>
+    <script>
+        let s = 5;
+        const el = document.getElementById('countdown');
+        const interval = setInterval(() => {
+            s--;
+            if (s <= 0) {
+                clearInterval(interval);
+                window.location.href = 'index-v2.html';
+            } else {
+                el.textContent = `> Decrypting alternative route in ${s}s...`;
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
