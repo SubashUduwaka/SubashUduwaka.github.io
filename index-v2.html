@@ -202,7 +202,22 @@
         .social-link:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); transform: translateY(-3px); }
 
         /* ===== INTERACTIVE TERMINAL ===== */
-        #terminal-section { padding-top: 2rem; padding-bottom: 2rem; }
+        #terminal-section {
+            padding-top: 2rem; padding-bottom: 2rem;
+            max-height: 1200px;
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), padding 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #terminal-section.section-collapsed {
+            max-height: 0px !important;
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+            margin-top: 0px !important;
+            margin-bottom: 0px !important;
+            opacity: 0 !important;
+            transform: translateY(30px) scale(0.95) !important;
+            pointer-events: none !important;
+            overflow: hidden !important;
+        }
         .terminal-window {
             position: relative;
             background: var(--terminal-bg-glass);
@@ -463,6 +478,8 @@
             .nav-menu { width: 220px; }
             .heatmap-card { padding: 1rem; }
             .stat-box { padding: 0.8rem 0.4rem; }
+            #threat-feed-drawer { width: 100vw !important; left: -105vw !important; }
+            #threat-feed-drawer.open { left: 0 !important; }
         }
 
         /* ===== PROGRESS BARS ===== */
@@ -523,6 +540,63 @@
             max-height: 70vh !important;
             height: 70vh !important;
         }
+
+        /* ===== THREAT FEED DRAWER & TAB ===== */
+        #threat-feed-tab {
+            position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 998;
+            background: rgba(10, 15, 26, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border); border-left: none;
+            color: var(--green); border-radius: 0 8px 8px 0;
+            padding: 1.25rem 0.6rem; font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            cursor: none; outline: none; transition: all 0.3s ease;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.3), 0 0 10px rgba(0,255,136,0.05);
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+            letter-spacing: 1px;
+        }
+        #threat-feed-tab:hover {
+            color: var(--bg); background: var(--green); border-color: var(--green);
+            box-shadow: 0 0 15px var(--green-glow);
+        }
+        
+        #threat-feed-drawer {
+            position: fixed; top: 0; left: -400px; width: 380px; height: 100vh; z-index: 1005;
+            background: rgba(8, 12, 22, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border);
+            transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; flex-direction: column; padding: 2rem 1.5rem;
+            box-shadow: 10px 0 40px rgba(0,0,0,0.5);
+        }
+        #threat-feed-drawer.open {
+            left: 0;
+        }
+        .drawer-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .drawer-header h3 {
+            font-family: var(--mono); font-size: 1rem; color: var(--green); font-weight: 700; margin: 0;
+        }
+        #threat-feed-close {
+            background: none; border: 1px solid var(--border); border-radius: 50%;
+            width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+            color: var(--text-secondary); cursor: none; font-size: 0.75rem; transition: all 0.2s;
+        }
+        #threat-feed-close:hover {
+            border-color: var(--red); color: var(--red); background: rgba(239, 68, 68, 0.05);
+        }
+        .drawer-subheader {
+            font-family: var(--mono); font-size: 0.6rem; color: var(--text-muted);
+            margin-bottom: 1.5rem; letter-spacing: 1px; border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+        .drawer-content {
+            flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem;
+            scrollbar-width: thin; scrollbar-color: var(--green-muted) transparent;
+        }
+        .drawer-content::-webkit-scrollbar { width: 3px; }
+        .drawer-content::-webkit-scrollbar-thumb { background: var(--green-muted); border-radius: 3px; }
     </style>
 </head>
 <body class="loading">
@@ -786,19 +860,6 @@
                         <span style="color: var(--green); font-family: var(--mono); font-size: 0.7rem;">[ READ LOG ]</span>
                     </div>
             </div>
-
-            <!-- Live Cyber News Feed Widget -->
-            <div class="heatmap-card fade-up" style="margin-top: 2rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem;">
-                    <h3 style="font-family: var(--mono); font-size: 0.85rem; color: var(--green); font-weight: 600; display: flex; align-items: center; gap: 0.5rem; margin: 0;">
-                        📡 Live Threat Intelligence Feed <span style="display: inline-block; width: 6px; height: 6px; background: var(--red); border-radius: 50%; animation: blink 1.5s infinite;"></span>
-                    </h3>
-                    <span style="font-family: var(--mono); font-size: 0.65rem; color: var(--text-muted);">BLEEPINGCOMPUTER RSS GATEWAY</span>
-                </div>
-                <div id="cyber-news-feed" style="display: flex; flex-direction: column; gap: 0.8rem; font-family: var(--mono); font-size: 0.75rem;">
-                    <div style="color: var(--text-muted);">[CONNECTING] Establishing SSL connection to Threat Feed gateway...</div>
-                </div>
-            </div>
         </section>
 
         <!-- Experience -->
@@ -822,7 +883,7 @@
             <div class="contact-layout">
                 <div class="contact-text fade-up">
                     <h3>Ready to work together?</h3>
-                    <p>Whether it's a security challenge, research opportunity, or a chat about <strong>cloud security</strong> — I'd love to hear from you.</p>
+                    <p>Whether it's a security challenge, research opportunity, or a chat about <strong>cybersecurity</strong> — I'd love to hear from you.</p>
                     <div class="contact-items">
                         <a href="mailto:subash.uduwaka@gmail.com" class="contact-item"><div class="contact-item-icon">📧</div>subash.uduwaka@gmail.com</a>
                         <a href="https://www.linkedin.com/in/uduwaka/" class="contact-item" target="_blank"><div class="contact-item-icon">💼</div>linkedin.com/in/uduwaka</a>
@@ -858,6 +919,21 @@
     <!-- Floating Back to Top Button -->
     <button id="back-to-top" class="magnetic" aria-label="Scroll to Top">▲</button>
     <button id="terminal-fab" class="magnetic" aria-label="Toggle Terminal" style="opacity: 0; transform: translateY(20px);">&gt;_</button>
+
+    <!-- Floating Threat Feed Tab -->
+    <button id="threat-feed-tab" class="magnetic" aria-label="Open Threat Feed" style="opacity: 0; transform: translateY(-50%) translateX(-20px);"><span style="display:inline-block; transform: rotate(-90deg) translateX(-2px);">📡 THREAT FEED</span></button>
+
+    <!-- Threat Feed Drawer -->
+    <div id="threat-feed-drawer">
+        <div class="drawer-header">
+            <h3>📡 Live Threat Feed</h3>
+            <button id="threat-feed-close" aria-label="Close Threat Feed">✕</button>
+        </div>
+        <div class="drawer-subheader">BLEEPINGCOMPUTER LATEST INTEL</div>
+        <div id="cyber-news-feed" class="drawer-content">
+            <div style="color: var(--text-muted);">[CONNECTING] Establishing SSL connection to Threat Feed gateway...</div>
+        </div>
+    </div>
 
     <!-- Terminal Writeup Modal -->
     <div id="writeup-modal" style="position: fixed; inset: 0; z-index: 100000; background: rgba(6, 9, 15, 0.95); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; padding: 1.5rem;">
@@ -1318,6 +1394,7 @@
     // ========== SCROLL PROGRESS & BACK TO TOP ==========
     const bttBtn = document.getElementById('back-to-top');
     const termFab = document.getElementById('terminal-fab');
+    const threatTab = document.getElementById('threat-feed-tab');
     const scrollBar = document.getElementById('scroll-progress');
     window.addEventListener('scroll', () => {
         const progress = (window.scrollY) / (document.documentElement.scrollHeight - window.innerHeight) * 100;
@@ -1329,12 +1406,20 @@
                 termFab.style.opacity = '1';
                 termFab.style.transform = 'translateY(0)';
             }
+            if (threatTab) {
+                threatTab.style.opacity = '1';
+                threatTab.style.transform = 'translateY(-50%) translateX(0)';
+            }
         } else {
             bttBtn.style.opacity = '0';
             bttBtn.style.transform = 'translateY(20px)';
             if (termFab) {
                 termFab.style.opacity = '0';
                 termFab.style.transform = 'translateY(20px)';
+            }
+            if (threatTab) {
+                threatTab.style.opacity = '0';
+                threatTab.style.transform = 'translateY(-50%) translateX(-20px)';
             }
         }
     });
@@ -1944,15 +2029,12 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
     const redDot = document.getElementById('term-dot-red');
     const yellowDot = document.getElementById('term-dot-yellow');
     const greenDot = document.getElementById('term-dot-green');
+    const terminalSection = document.getElementById('terminal-section');
 
-    if (redDot && terminalWindow) {
+    if (redDot && terminalSection) {
         redDot.addEventListener('click', (e) => {
             e.stopPropagation();
-            terminalWindow.style.opacity = '0';
-            terminalWindow.style.transform = 'scale(0.95) translateY(10px)';
-            setTimeout(() => {
-                terminalWindow.style.display = 'none';
-            }, 300);
+            terminalSection.classList.add('section-collapsed');
         });
     }
 
@@ -1975,30 +2057,48 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
     }
 
     // ========== FLOATING TERMINAL TOGGLE BUTTON (FAB) ==========
-    if (termFab && terminalWindow) {
+    if (termFab && terminalSection) {
         termFab.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (terminalWindow.style.display === 'none' || terminalWindow.style.opacity === '0') {
-                terminalWindow.style.display = 'block';
-                // Trigger reflow to ensure animation runs
-                terminalWindow.offsetHeight;
-                terminalWindow.style.opacity = '1';
-                terminalWindow.style.transform = 'scale(1) translateY(0)';
+            if (terminalSection.classList.contains('section-collapsed')) {
+                terminalSection.classList.remove('section-collapsed');
                 // Scroll to terminal section
-                const section = document.getElementById('terminal-section');
-                if (section) {
-                    section.scrollIntoView({ behavior: 'smooth' });
-                }
-                setTimeout(() => { termInput.focus(); }, 400);
-            } else {
-                terminalWindow.style.opacity = '0';
-                terminalWindow.style.transform = 'scale(0.95) translateY(10px)';
                 setTimeout(() => {
-                    terminalWindow.style.display = 'none';
-                }, 300);
+                    terminalSection.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+                setTimeout(() => { termInput.focus(); }, 600);
+            } else {
+                terminalSection.classList.add('section-collapsed');
             }
         });
     }
+
+    // ========== THREAT FEED DRAWER EVENTS ==========
+    const threatClose = document.getElementById('threat-feed-close');
+    const threatDrawer = document.getElementById('threat-feed-drawer');
+
+    if (threatTab && threatDrawer) {
+        threatTab.addEventListener('click', (e) => {
+            e.stopPropagation();
+            threatDrawer.classList.toggle('open');
+        });
+    }
+
+    if (threatClose && threatDrawer) {
+        threatClose.addEventListener('click', (e) => {
+            e.stopPropagation();
+            threatDrawer.classList.remove('open');
+        });
+    }
+
+    // Close drawer if clicked outside
+    document.addEventListener('click', (e) => {
+        if (threatDrawer && threatDrawer.classList.contains('open')) {
+            if (!threatDrawer.contains(e.target) && e.target !== threatTab && !threatTab.contains(e.target)) {
+                threatDrawer.classList.remove('open');
+            }
+        }
+    });
 
     // ========== KONAMI CODE ==========
     const konamiCode=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
@@ -2094,7 +2194,7 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
         "AUTHENTICATING VISITOR CLIENT IP...",
         "LOADING SYSTEM REFACTOR MODULES...",
         "ESTABLISHING SECURE SSH TUNNEL...",
-        "SCANNING CLOUD CONTEXTS (AWS, GCP, AZURE)...",
+        "SCANNING NETWORK BOUNDARIES & THREAT VECTORS...",
         "INTEGRITY AUDIT: PASS. UPTIME: SECURE.",
         "ACCESS GRANTED. WELCOME, INVESTIGATOR."
     ];
