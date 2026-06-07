@@ -3035,6 +3035,290 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
     const ccSection = document.getElementById('command-center');
     if (ccSection) ccObserver.observe(ccSection);
 
+    // ========== CTF PLATFORM ENGINE ==========
+    const CTF_CHALLENGES = {
+        rotten: {
+            name: 'Rotten Cipher', pts: 100, flag: 'FLAG{R0T13_1S_CLASS1C_CRYPTO}',
+            setup: () => [
+                { t: 'green bold', v: '🔀 CHALLENGE: ROTTEN CIPHER [100 pts] — Rookie' },
+                { t: '', v: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' },
+                { t: '', v: 'You intercepted an encoded message from a threat actor.' },
+                { t: '', v: 'Decode the ciphertext to extract the hidden flag:' },
+                { t: '', v: '' },
+                { t: 'amber bold', v: '  SYNT{E0G13_1F_PYNFF1P_PELCGB}' },
+                { t: '', v: '' },
+                { t: 'cyan', v: 'Hint: ROT13 rotates each letter 13 positions in the alphabet.' },
+                { t: 'cyan', v: 'Tip:  A→N, B→O, C→P ... N→A etc. Numbers/symbols unchanged.' },
+                { t: '', v: '' },
+                { t: 'amber', v: 'Submit: submit FLAG{...}' },
+            ]
+        },
+        inspector: {
+            name: "Inspector's Find", pts: 100, flag: 'FLAG{Y0U_F0UND_TH3_H1DD3N_S0URC3_C0D3}',
+            setup: () => [
+                { t: 'green bold', v: "🔍 CHALLENGE: INSPECTOR'S FIND [100 pts] — Rookie" },
+                { t: '', v: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' },
+                { t: '', v: 'A developer accidentally left a flag in the HTML source code.' },
+                { t: '', v: '' },
+                { t: 'cyan', v: 'Open DevTools → Elements or press Ctrl+U (View Source).' },
+                { t: 'cyan', v: 'Search for FLAG{ in the HTML near the Command Center section.' },
+                { t: '', v: '' },
+                { t: 'amber', v: 'Submit: submit FLAG{...}' },
+            ]
+        },
+        nmap: {
+            name: 'Nmap Analysis', pts: 150, flag: 'FLAG{VSFTPD_2_3_4_BACKDOOR}',
+            setup: () => [
+                { t: 'green bold', v: '📡 CHALLENGE: NMAP ANALYSIS [150 pts] — Rookie' },
+                { t: '', v: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' },
+                { t: '', v: 'You scanned a suspicious server. Analyze the results:' },
+                { t: '', v: '' },
+                { t: 'text-muted', v: '  PORT     STATE  SERVICE  VERSION' },
+                { t: 'text-muted', v: '  22/tcp   open   ssh      OpenSSH 8.2p1' },
+                { t: 'amber bold', v: '  21/tcp   open   ftp      vsftpd 2.3.4' },
+                { t: 'text-muted', v: '  80/tcp   open   http     Apache 2.4.49' },
+                { t: 'text-muted', v: '  3306/tcp closed mysql' },
+                { t: '', v: '' },
+                { t: 'cyan', v: 'The FTP service version has a famous backdoor vulnerability.' },
+                { t: 'cyan', v: 'Format: FLAG{SERVICENAME_VERSION_VULNTYPE} (dots→underscores)' },
+                { t: '', v: '' },
+                { t: 'amber', v: 'Submit: submit FLAG{...}' },
+            ]
+        },
+        xor: {
+            name: 'Rogue XOR', pts: 250, flag: 'FLAG{XOR_M4ST3R_KEY_5A}',
+            setup: () => [
+                { t: 'green bold', v: '⚡ CHALLENGE: ROGUE XOR [250 pts] — Hardcore' },
+                { t: '', v: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' },
+                { t: '', v: 'Intercepted encrypted C2 beacon payload (hex):' },
+                { t: '', v: '' },
+                { t: 'amber bold', v: '  1c31392b313d3e0c302537251c31' },
+                { t: '', v: '' },
+                { t: 'cyan', v: 'The payload is XOR encrypted with a single byte key (0x00–0xFF).' },
+                { t: 'cyan', v: 'Try: xor-test <hex_key>  to test keys.' },
+                { t: 'cyan', v: 'Example: xor-test 1A' },
+                { t: '', v: '' },
+                { t: 'text-muted', v: 'Hint: The key is 0x5A (decimal 90).' },
+                { t: 'amber', v: 'Submit: submit FLAG{...}' },
+            ]
+        },
+        forensics: {
+            name: 'Log Forensics', pts: 300, flag: 'FLAG{W3BSH3LL_D3T3CT3D_sh3ll.php}',
+            setup: () => [
+                { t: 'green bold', v: '🕵️ CHALLENGE: LOG FORENSICS [300 pts] — Hardcore' },
+                { t: '', v: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' },
+                { t: '', v: 'A web server was compromised. Analyze these access logs:' },
+                { t: '', v: '' },
+                { t: 'text-muted', v: '  192.168.1.10 - GET /index.php 200' },
+                { t: 'text-muted', v: '  192.168.1.10 - GET /about.php 200' },
+                { t: 'amber bold', v: '  185.220.101.34 - POST /uploads/sh3ll.php?cmd=aWQ= 200' },
+                { t: 'amber bold', v: '  185.220.101.34 - POST /uploads/sh3ll.php?cmd=d2hvYW1p 200' },
+                { t: 'text-muted', v: '  192.168.1.15 - GET /contact.php 200' },
+                { t: '', v: '' },
+                { t: 'cyan', v: 'base64: aWQ= → id    d2hvYW1p → whoami' },
+                { t: 'cyan', v: 'Format: FLAG{W3BSH3LL_D3T3CT3D_<filename>}' },
+                { t: '', v: '' },
+                { t: 'amber', v: 'Submit: submit FLAG{...}' },
+            ]
+        },
+        sqli: {
+            name: 'Login Bypass', pts: 350, flag: 'FLAG{SQLI_4UTH_BYPA55_SUCCESS}',
+            setup: () => [
+                { t: 'green bold', v: "💉 CHALLENGE: LOGIN BYPASS [350 pts] — Hardcore" },
+                { t: '', v: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' },
+                { t: '', v: 'A vulnerable login form. The SQL query is:' },
+                { t: '', v: '' },
+                { t: 'cyan', v: "  SELECT * FROM users WHERE user='INPUT' AND pass='pass'" },
+                { t: '', v: '' },
+                { t: '', v: 'Bypass authentication by injecting into the username field.' },
+                { t: 'cyan', v: "  Use: sqli-login <your_payload>" },
+                { t: 'cyan', v: "  Example: sqli-login admin" },
+                { t: '', v: '' },
+                { t: 'text-muted', v: "Hint: Think about what makes the WHERE clause always TRUE." },
+                { t: 'amber', v: 'Submit: submit FLAG{...}' },
+            ]
+        },
+    };
+
+    let ctfSolved = JSON.parse(localStorage.getItem('ctf_solved') || '[]');
+    let currentCTFChallenge = null;
+
+    function updateCTFBoard() {
+        const pts = ctfSolved.reduce((s, id) => s + (CTF_CHALLENGES[id]?.pts || 0), 0);
+        const solved = ctfSolved.length;
+        const scoreEl = document.getElementById('ctf-score');
+        const solvedEl = document.getElementById('ctf-solved-count');
+        const rankEl = document.getElementById('ctf-rank');
+        if (scoreEl) scoreEl.textContent = pts;
+        if (solvedEl) solvedEl.textContent = solved;
+        let rank = 'SCRIPT KIDDIE';
+        if (pts >= 100) rank = 'NET DEFENDER';
+        if (pts >= 400) rank = 'CYBER ANALYST';
+        if (pts >= 900) rank = 'CYBER COMMANDER';
+        if (pts >= 1250) rank = 'SEC ARCHITECT';
+        if (rankEl) rankEl.textContent = rank;
+        Object.keys(CTF_CHALLENGES).forEach(id => {
+            const card = document.getElementById('ctf-card-' + id);
+            if (card) {
+                if (ctfSolved.includes(id)) card.classList.add('solved');
+                else card.classList.remove('solved');
+            }
+        });
+        localStorage.setItem('ctf_solved', JSON.stringify(ctfSolved));
+    }
+    updateCTFBoard();
+
+    // Add CTF to terminal commands dict
+    if (typeof commands !== 'undefined') {
+        commands['ctf'] = () => [
+            { t: 'green bold', v: '🚩 CTF ARENA — Interactive Security Challenges' },
+            { t: '', v: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' },
+            { t: 'cyan', v: '🟢 ROOKIE TIER:' },
+            { t: 'cyan', v: '  ctf play rotten    → Rotten Cipher [100 pts]' },
+            { t: 'cyan', v: "  ctf play inspector → Inspector's Find [100 pts]" },
+            { t: 'cyan', v: '  ctf play nmap      → Nmap Analysis [150 pts]' },
+            { t: 'red bold', v: '🔴 HARDCORE TIER:' },
+            { t: 'red', v: '  ctf play xor       → Rogue XOR [250 pts]' },
+            { t: 'red', v: '  ctf play forensics → Log Forensics [300 pts]' },
+            { t: 'red', v: '  ctf play sqli      → Login Bypass [350 pts]' },
+            { t: '', v: '' },
+            { t: 'amber', v: '  submit FLAG{...}   → Submit a flag' },
+            { t: 'amber', v: '  ctf score          → View your score' },
+        ];
+        commands['ctf score'] = () => {
+            const pts = ctfSolved.reduce((s, id) => s + (CTF_CHALLENGES[id]?.pts || 0), 0);
+            const rankEl = document.getElementById('ctf-rank');
+            return [
+                { t: 'green bold', v: `🏆 Score: ${pts} pts | Flags: ${ctfSolved.length}/6` },
+                { t: 'cyan', v: `Rank: ${rankEl ? rankEl.textContent : 'N/A'}` },
+                { t: '', v: ctfSolved.length > 0 ? '✓ Solved: ' + ctfSolved.join(', ') : 'No flags captured yet. Type ctf to start.' },
+            ];
+        };
+    }
+
+    // CTF terminal input handler (capture phase - runs before main handler)
+    const ctfTermInput = document.getElementById('terminal-input');
+    if (ctfTermInput) {
+        ctfTermInput.addEventListener('keydown', function ctfInputHandler(e) {
+            if (e.key !== 'Enter') return;
+            const rawInput = ctfTermInput.value.trim();
+            if (!rawInput) return;
+            const cmd = rawInput.toLowerCase();
+
+            // ctf play <id>
+            if (cmd.startsWith('ctf play ')) {
+                const challengeId = cmd.replace('ctf play ', '').trim();
+                const challenge = CTF_CHALLENGES[challengeId];
+                if (!challenge) {
+                    setTimeout(() => printTerminalLines([{ t: 'red', v: 'Unknown challenge. Type ctf to see all challenges.' }]), 10);
+                    return;
+                }
+                currentCTFChallenge = challengeId;
+                setTimeout(() => {
+                    printTerminalLines(challenge.setup());
+                    if (ctfSolved.includes(challengeId)) {
+                        printTerminalLines([{ t: 'green bold', v: '✓ Already solved! Try another one.' }]);
+                    }
+                }, 10);
+                e.stopImmediatePropagation();
+                ctfTermInput.value = '';
+                // echo
+                const echoLine = document.createElement('div'); echoLine.className = 'term-line';
+                echoLine.innerHTML = `<span class="term-prompt">visitor@subash:~$ </span><span class="term-cmd">${rawInput}</span>`;
+                document.getElementById('terminalBody')?.appendChild(echoLine);
+                return;
+            }
+
+            // xor-test <key>
+            if (cmd.startsWith('xor-test ')) {
+                const keyHex = cmd.replace('xor-test ', '').trim();
+                const key = parseInt(keyHex, 16);
+                if (isNaN(key)) {
+                    setTimeout(() => printTerminalLines([{ t: 'red', v: 'Invalid hex key. Example: xor-test 5A' }]), 10);
+                } else {
+                    const payload = '1c31392b313d3e0c302537251c31';
+                    const bytes = payload.match(/.{2}/g).map(b => parseInt(b, 16));
+                    const decoded = bytes.map(b => String.fromCharCode(b ^ key)).join('');
+                    setTimeout(() => printTerminalLines([{ t: 'cyan', v: `XOR(0x${keyHex.toUpperCase()}): "${decoded}"` }]), 10);
+                }
+                e.stopImmediatePropagation();
+                ctfTermInput.value = '';
+                const echoLine = document.createElement('div'); echoLine.className = 'term-line';
+                echoLine.innerHTML = `<span class="term-prompt">visitor@subash:~$ </span><span class="term-cmd">${rawInput}</span>`;
+                document.getElementById('terminalBody')?.appendChild(echoLine);
+                return;
+            }
+
+            // sqli-login <payload>
+            if (cmd.startsWith('sqli-login ')) {
+                const payload = rawInput.replace(/sqli-login /i, '').trim();
+                const isInjection = /('|")\s*(or|OR)\s*['"]?1['"]?\s*=\s*['"]?1|or\s+1=1|'\s*--/i.test(payload);
+                if (isInjection) {
+                    setTimeout(() => printTerminalLines([
+                        { t: 'green bold', v: '✓ AUTHENTICATION BYPASSED!' },
+                        { t: 'green', v: 'The injected payload broke the SQL WHERE clause.' },
+                        { t: 'cyan', v: `Executed: SELECT * FROM users WHERE user='${payload}' AND pass='pass'` },
+                        { t: 'cyan', v: 'WHERE is always TRUE → all rows returned → auth bypassed.' },
+                        { t: '', v: '' },
+                        { t: 'amber', v: 'Now submit: submit FLAG{SQLI_4UTH_BYPA55_SUCCESS}' },
+                    ]), 10);
+                } else {
+                    setTimeout(() => printTerminalLines([
+                        { t: 'red', v: `LOGIN FAILED: Incorrect credentials for "${payload}".` },
+                        { t: 'text-muted', v: "Try injecting SQL to break the WHERE clause logic." },
+                    ]), 10);
+                }
+                e.stopImmediatePropagation();
+                ctfTermInput.value = '';
+                const echoLine = document.createElement('div'); echoLine.className = 'term-line';
+                echoLine.innerHTML = `<span class="term-prompt">visitor@subash:~$ </span><span class="term-cmd">${rawInput}</span>`;
+                document.getElementById('terminalBody')?.appendChild(echoLine);
+                return;
+            }
+
+            // submit FLAG{...}
+            if (cmd.startsWith('submit ')) {
+                const submitted = rawInput.replace(/submit /i, '').trim();
+                let matched = null;
+                Object.entries(CTF_CHALLENGES).forEach(([id, ch]) => {
+                    if (ch.flag === submitted) matched = id;
+                });
+                if (matched) {
+                    if (ctfSolved.includes(matched)) {
+                        setTimeout(() => printTerminalLines([{ t: 'amber', v: 'Already solved! Try another challenge.' }]), 10);
+                    } else {
+                        ctfSolved.push(matched);
+                        updateCTFBoard();
+                        const ch = CTF_CHALLENGES[matched];
+                        systemState = 'celebration';
+                        setTimeout(() => {
+                            const newPts = ctfSolved.reduce((s, id) => s + (CTF_CHALLENGES[id]?.pts || 0), 0);
+                            const rankEl = document.getElementById('ctf-rank');
+                            printTerminalLines([
+                                { t: 'green bold', v: `✓ CORRECT FLAG! +${ch.pts} pts awarded!` },
+                                { t: 'green bold', v: `🏆 Challenge "${ch.name}" solved!` },
+                                { t: 'cyan', v: `Score: ${newPts} pts | Rank: ${rankEl ? rankEl.textContent : ''}` },
+                                { t: '', v: 'The CTF Arena scoreboard has been updated.' },
+                            ]);
+                            setTimeout(() => { systemState = 'secure'; }, 2500);
+                        }, 10);
+                    }
+                } else {
+                    setTimeout(() => printTerminalLines([
+                        { t: 'red', v: `✗ Incorrect flag: ${submitted}` },
+                        { t: 'amber', v: 'Keep trying! Flags must be in FLAG{...} format.' },
+                    ]), 10);
+                }
+                e.stopImmediatePropagation();
+                ctfTermInput.value = '';
+                const echoLine = document.createElement('div'); echoLine.className = 'term-line';
+                echoLine.innerHTML = `<span class="term-prompt">visitor@subash:~$ </span><span class="term-cmd">${rawInput}</span>`;
+                document.getElementById('terminalBody')?.appendChild(echoLine);
+                return;
+            }
+        }, true); // capture=true runs before main handler
+    }
+
     </script>
 </body>
 </html>
