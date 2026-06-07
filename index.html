@@ -249,28 +249,8 @@
             transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
         }
         #loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loader-wireframe { width: 120px; height: 120px; perspective: 500px; margin-bottom: 2rem; }
-        .wireframe-shape {
-            width: 100%; height: 100%; position: relative; transform-style: preserve-3d;
-            animation: wireframeSpin 4s linear infinite;
-        }
-        .wireframe-face {
-            position: absolute; width: 100%; height: 100%;
-            border: 1.5px solid var(--green);
-            background: linear-gradient(to top, rgba(0,255,136,0.22) var(--load-progress, 0%), transparent var(--load-progress, 0%));
-            box-shadow: 0 0 8px var(--green-glow), inset 0 0 12px rgba(0,255,136,0.06);
-            transition: background 0.2s ease;
-        }
-        .wireframe-face.front  { transform: translateZ(60px); }
-        .wireframe-face.back   { transform: translateZ(-60px); }
-        .wireframe-face.left   { transform: rotateY(-90deg) translateZ(60px); }
-        .wireframe-face.right  { transform: rotateY(90deg) translateZ(60px); }
-        .wireframe-face.top    { transform: rotateX(90deg) translateZ(60px); }
-        .wireframe-face.bottom { transform: rotateX(-90deg) translateZ(60px); }
-        @keyframes wireframeSpin {
-            0%   { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
-            100% { transform: rotateX(360deg) rotateY(540deg) rotateZ(180deg); }
-        }
+        .loader-wireframe-container { width: 160px; height: 160px; margin-bottom: 2rem; display: flex; align-items: center; justify-content: center; }
+        #loader-canvas { width: 160px; height: 160px; display: block; filter: drop-shadow(0 0 8px var(--green-glow)); }
         .loader-logo { font-family: var(--mono); font-size: 2.2rem; font-weight: 700; color: var(--green); margin-bottom: 1.5rem; letter-spacing: 3px; text-shadow: 0 0 10px var(--green-glow); }
         .loader-bar { width: 250px; height: 3px; background: var(--border); border-radius: 3px; overflow: hidden; }
         .loader-bar-inner { height: 100%; width: 0%; background: var(--green); border-radius: 3px; transition: width 0.3s ease; box-shadow: 0 0 8px var(--green-glow); }
@@ -307,62 +287,7 @@
 
         /* ===== COMMAND CENTER ===== */
         #command-center { padding: clamp(4rem,8vw,6rem) 2rem; max-width: 1100px; margin: 0 auto; }
-        .cc-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
-        .cc-tab-btn {
-            font-family: var(--mono); font-size: 0.75rem; padding: 0.6rem 1.4rem;
-            border: 1px solid var(--border); border-radius: 8px;
-            background: var(--bg-card); color: var(--text-muted);
-            cursor: none; transition: all 0.2s ease; outline: none;
-            backdrop-filter: blur(10px);
-        }
-        .cc-tab-btn:hover { border-color: var(--green-border); color: var(--green); }
-        .cc-tab-btn.active {
-            background: var(--green-bg); border-color: var(--green);
-            color: var(--green); box-shadow: 0 0 12px var(--green-glow);
-        }
-        .cc-panel { display: none; }
-        .cc-panel.active { display: block; }
 
-        /* Threat Map */
-        .threat-map-layout { display: grid; grid-template-columns: 200px 1fr; gap: 1.5rem; align-items: start; }
-        @media(max-width:768px) { .threat-map-layout { grid-template-columns: 1fr; } }
-        .threat-sidebar {
-            background: rgba(10,15,24,0.85); backdrop-filter: blur(14px);
-            border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem;
-            display: flex; flex-direction: column; gap: 1rem;
-        }
-        .threat-sidebar-title { font-family: var(--mono); font-size: 0.6rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
-        .defcon-badge {
-            text-align: center; padding: 0.8rem;
-            border-radius: 8px; border: 1px solid var(--green-border);
-            background: var(--green-bg);
-        }
-        .defcon-level { font-family: var(--mono); font-size: 1.8rem; font-weight: 700; color: var(--green); line-height: 1; }
-        .defcon-label { font-family: var(--mono); font-size: 0.55rem; color: var(--text-muted); letter-spacing: 2px; margin-top: 0.25rem; }
-        .threat-stat { display: flex; justify-content: space-between; align-items: center; }
-        .threat-stat-label { font-family: var(--mono); font-size: 0.6rem; color: var(--text-muted); }
-        .threat-stat-val { font-family: var(--mono); font-size: 0.75rem; color: var(--green); font-weight: 600; }
-        .threat-map-container {
-            position: relative; border-radius: 12px; overflow: hidden;
-            border: 1px solid var(--border); background: rgba(4,8,16,0.9);
-            backdrop-filter: blur(14px);
-        }
-        #threat-map-canvas { width: 100%; display: block; height: 420px; }
-        .threat-log {
-            background: rgba(4,8,16,0.9); backdrop-filter: blur(14px);
-            border: 1px solid var(--border); border-radius: 12px;
-            padding: 1rem; margin-top: 1.5rem; height: 140px; overflow-y: auto;
-            font-family: var(--mono); font-size: 0.62rem;
-            scrollbar-width: thin; scrollbar-color: var(--green-muted) transparent;
-        }
-        .threat-log::-webkit-scrollbar { width: 3px; }
-        .threat-log::-webkit-scrollbar-thumb { background: var(--green-muted); border-radius: 3px; }
-        .tlog-entry { padding: 0.15rem 0; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .tlog-entry .tlog-ts { color: var(--text-muted); margin-right: 0.5rem; }
-        .tlog-entry .tlog-src { color: var(--red); }
-        .tlog-entry .tlog-dst { color: var(--green); }
-        .tlog-entry .tlog-type { color: var(--cyan); }
-        .tlog-entry .tlog-block { color: var(--amber); }
 
         /* CTF Arena */
         .ctf-layout { display: grid; grid-template-columns: 260px 1fr; gap: 2rem; align-items: start; }
@@ -869,15 +794,8 @@
 
     <!-- Loader -->
     <div id="loader">
-        <div class="loader-wireframe">
-            <div class="wireframe-shape">
-                <div class="wireframe-face front"></div>
-                <div class="wireframe-face back"></div>
-                <div class="wireframe-face left"></div>
-                <div class="wireframe-face right"></div>
-                <div class="wireframe-face top"></div>
-                <div class="wireframe-face bottom"></div>
-            </div>
+        <div class="loader-wireframe-container">
+            <canvas id="loader-canvas" width="160" height="160"></canvas>
         </div>
         <div class="loader-logo">SUBASH://</div>
         <div class="loader-bar"><div class="loader-bar-inner" id="loaderBarInner"></div></div>
@@ -914,7 +832,7 @@
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#hero">Home</a></li>
                 <li><a href="#terminal-section">Terminal</a></li>
-                <li><a href="#command-center">Command Center</a></li>
+                <li><a href="#command-center">CTF Arena</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#skills">Skills</a></li>
                 <li><a href="#projects">Projects</a></li>
@@ -1017,108 +935,72 @@
             </div>
         </section>
 
-        <!-- Cyber Command Center -->
+        <!-- Cyber Command Center / CTF Arena -->
         <section id="command-center">
-            <div class="section-tag fade-up">Operations</div>
-            <h2 class="section-heading fade-up">Cyber <em>Command Center</em></h2>
-            <p class="section-sub fade-up">Live global threat intelligence and interactive security challenges.</p>
-            <div class="cc-tabs">
-                <button class="cc-tab-btn active" id="cc-tab-map" onclick="switchCCTab('map')">🗺️ Live Threat Map</button>
-                <button class="cc-tab-btn" id="cc-tab-ctf" onclick="switchCCTab('ctf')">🚩 CTF Arena</button>
-            </div>
+            <div class="section-tag fade-up">CTF Arena</div>
+            <h2 class="section-heading fade-up">Cyber <em>Range</em></h2>
+            <p class="section-sub fade-up">Interactive Capture The Flag challenges to test your security skills.</p>
 
-            <!-- Threat Map Panel -->
-            <div class="cc-panel active" id="cc-panel-map">
-                <div class="threat-map-layout">
-                    <div class="threat-sidebar">
-                        <div class="threat-sidebar-title">🛡️ Threat Status</div>
-                        <div class="defcon-badge">
-                            <div class="defcon-level" id="defcon-level">4</div>
-                            <div class="defcon-label">DEFCON LEVEL</div>
-                        </div>
-                        <div style="display:flex;flex-direction:column;gap:0.6rem;">
-                            <div class="threat-stat"><span class="threat-stat-label">ATTACKS/MIN</span><span class="threat-stat-val" id="stat-apm">0</span></div>
-                            <div class="threat-stat"><span class="threat-stat-label">BLOCKED TODAY</span><span class="threat-stat-val" id="stat-blocked">0</span></div>
-                            <div class="threat-stat"><span class="threat-stat-label">ACTIVE NODES</span><span class="threat-stat-val">8</span></div>
-                            <div class="threat-stat"><span class="threat-stat-label">UPTIME</span><span class="threat-stat-val" id="stat-uptime">00:00:00</span></div>
-                        </div>
-                        <div style="margin-top:0.5rem;">
-                            <div class="threat-sidebar-title" style="margin-bottom:0.5rem;">TOP THREATS</div>
-                            <div id="top-threats" style="display:flex;flex-direction:column;gap:0.3rem;"></div>
-                        </div>
+            <div class="ctf-layout">
+                <div class="ctf-scoreboard">
+                    <div class="ctf-rank-badge" id="ctf-rank">SCRIPT KIDDIE</div>
+                    <div class="ctf-score-num" id="ctf-score">0</div>
+                    <div class="ctf-score-label">TOTAL POINTS</div>
+                    <div class="ctf-flags-row">
+                        <div class="ctf-flag-stat"><div class="ctf-flag-num" id="ctf-solved-count">0</div><div class="ctf-flag-lbl">SOLVED</div></div>
+                        <div class="ctf-flag-stat"><div class="ctf-flag-num">6</div><div class="ctf-flag-lbl">TOTAL</div></div>
                     </div>
-                    <div class="threat-map-container">
-                        <canvas id="threat-map-canvas"></canvas>
+                    <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);font-family:var(--mono);font-size:0.6rem;color:var(--text-muted);line-height:1.8;">
+                        💡 Type <span style="color:var(--cyan);">ctf</span> in the terminal<br>or use the buttons below<br>to start challenges
                     </div>
                 </div>
-                <div class="threat-log" id="threat-log">
-                    <div class="tlog-entry" style="color:var(--green);">[ THREAT MAP INITIALIZED — Monitoring global attack vectors... ]</div>
-                </div>
-            </div>
-
-            <!-- CTF Arena Panel -->
-            <div class="cc-panel" id="cc-panel-ctf">
-                <div class="ctf-layout">
-                    <div class="ctf-scoreboard">
-                        <div class="ctf-rank-badge" id="ctf-rank">SCRIPT KIDDIE</div>
-                        <div class="ctf-score-num" id="ctf-score">0</div>
-                        <div class="ctf-score-label">TOTAL POINTS</div>
-                        <div class="ctf-flags-row">
-                            <div class="ctf-flag-stat"><div class="ctf-flag-num" id="ctf-solved-count">0</div><div class="ctf-flag-lbl">SOLVED</div></div>
-                            <div class="ctf-flag-stat"><div class="ctf-flag-num">6</div><div class="ctf-flag-lbl">TOTAL</div></div>
+                <div class="ctf-challenges-section">
+                    <div class="ctf-difficulty-label">🟢 Rookie Tier</div>
+                    <div class="ctf-grid">
+                        <div class="ctf-card" id="ctf-card-rotten">
+                            <div class="ctf-card-icon">🔀</div>
+                            <div class="ctf-card-name">Rotten Cipher</div>
+                            <div class="ctf-card-cat">DECRYPTION · ROT13</div>
+                            <div class="ctf-card-pts">100 pts</div>
+                            <button class="ctf-launch-btn" onclick="launchCTF('rotten')">▶ Launch in Terminal</button>
                         </div>
-                        <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);font-family:var(--mono);font-size:0.6rem;color:var(--text-muted);line-height:1.8;">
-                            💡 Type <span style="color:var(--cyan);">ctf</span> in the terminal<br>or use the buttons below<br>to start challenges
+                        <div class="ctf-card" id="ctf-card-inspector">
+                            <div class="ctf-card-icon">🔍</div>
+                            <div class="ctf-card-name">Inspector's Find</div>
+                            <div class="ctf-card-cat">RECON · SOURCE CODE</div>
+                            <div class="ctf-card-pts">100 pts</div>
+                            <button class="ctf-launch-btn" onclick="launchCTF('inspector')">▶ Launch in Terminal</button>
+                        </div>
+                        <div class="ctf-card" id="ctf-card-nmap">
+                            <div class="ctf-card-icon">📡</div>
+                            <div class="ctf-card-name">Nmap Analysis</div>
+                            <div class="ctf-card-cat">RECON · SERVICE ID</div>
+                            <div class="ctf-card-pts">150 pts</div>
+                            <button class="ctf-launch-btn" onclick="launchCTF('nmap')">▶ Launch in Terminal</button>
                         </div>
                     </div>
-                    <div class="ctf-challenges-section">
-                        <div class="ctf-difficulty-label">🟢 Rookie Tier</div>
-                        <div class="ctf-grid">
-                            <div class="ctf-card" id="ctf-card-rotten">
-                                <div class="ctf-card-icon">🔀</div>
-                                <div class="ctf-card-name">Rotten Cipher</div>
-                                <div class="ctf-card-cat">DECRYPTION · ROT13</div>
-                                <div class="ctf-card-pts">100 pts</div>
-                                <button class="ctf-launch-btn" onclick="launchCTF('rotten')">▶ Launch in Terminal</button>
-                            </div>
-                            <div class="ctf-card" id="ctf-card-inspector">
-                                <div class="ctf-card-icon">🔍</div>
-                                <div class="ctf-card-name">Inspector's Find</div>
-                                <div class="ctf-card-cat">RECON · SOURCE CODE</div>
-                                <div class="ctf-card-pts">100 pts</div>
-                                <button class="ctf-launch-btn" onclick="launchCTF('inspector')">▶ Launch in Terminal</button>
-                            </div>
-                            <div class="ctf-card" id="ctf-card-nmap">
-                                <div class="ctf-card-icon">📡</div>
-                                <div class="ctf-card-name">Nmap Analysis</div>
-                                <div class="ctf-card-cat">RECON · SERVICE ID</div>
-                                <div class="ctf-card-pts">150 pts</div>
-                                <button class="ctf-launch-btn" onclick="launchCTF('nmap')">▶ Launch in Terminal</button>
-                            </div>
+                    <div class="ctf-difficulty-label">🔴 Hardcore Tier</div>
+                    <div class="ctf-grid">
+                        <div class="ctf-card" id="ctf-card-xor">
+                            <div class="ctf-card-icon">⚡</div>
+                            <div class="ctf-card-name">Rogue XOR</div>
+                            <div class="ctf-card-cat">CRYPTO · XOR CIPHER</div>
+                            <div class="ctf-card-pts">250 pts</div>
+                            <button class="ctf-launch-btn" onclick="launchCTF('xor')">▶ Launch in Terminal</button>
                         </div>
-                        <div class="ctf-difficulty-label">🔴 Hardcore Tier</div>
-                        <div class="ctf-grid">
-                            <div class="ctf-card" id="ctf-card-xor">
-                                <div class="ctf-card-icon">⚡</div>
-                                <div class="ctf-card-name">Rogue XOR</div>
-                                <div class="ctf-card-cat">CRYPTO · XOR CIPHER</div>
-                                <div class="ctf-card-pts">250 pts</div>
-                                <button class="ctf-launch-btn" onclick="launchCTF('xor')">▶ Launch in Terminal</button>
-                            </div>
-                            <div class="ctf-card" id="ctf-card-forensics">
-                                <div class="ctf-card-icon">🕵️</div>
-                                <div class="ctf-card-name">Log Forensics</div>
-                                <div class="ctf-card-cat">DFIR · LOG ANALYSIS</div>
-                                <div class="ctf-card-pts">300 pts</div>
-                                <button class="ctf-launch-btn" onclick="launchCTF('forensics')">▶ Launch in Terminal</button>
-                            </div>
-                            <div class="ctf-card" id="ctf-card-sqli">
-                                <div class="ctf-card-icon">💉</div>
-                                <div class="ctf-card-name">Login Bypass</div>
-                                <div class="ctf-card-cat">WEB SECURITY · SQLI</div>
-                                <div class="ctf-card-pts">350 pts</div>
-                                <button class="ctf-launch-btn" onclick="launchCTF('sqli')">▶ Launch in Terminal</button>
-                            </div>
+                        <div class="ctf-card" id="ctf-card-forensics">
+                            <div class="ctf-card-icon">🕵️</div>
+                            <div class="ctf-card-name">Log Forensics</div>
+                            <div class="ctf-card-cat">DFIR · LOG ANALYSIS</div>
+                            <div class="ctf-card-pts">300 pts</div>
+                            <button class="ctf-launch-btn" onclick="launchCTF('forensics')">▶ Launch in Terminal</button>
+                        </div>
+                        <div class="ctf-card" id="ctf-card-sqli">
+                            <div class="ctf-card-icon">💉</div>
+                            <div class="ctf-card-name">Login Bypass</div>
+                            <div class="ctf-card-cat">WEB SECURITY · SQLI</div>
+                            <div class="ctf-card-pts">350 pts</div>
+                            <button class="ctf-launch-btn" onclick="launchCTF('sqli')">▶ Launch in Terminal</button>
                         </div>
                     </div>
                 </div>
@@ -2682,12 +2564,174 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
         });
     }
 
-    // ========== SYSTEM BOOT LOADER ==========
+    // ========== SYSTEM BOOT LOADER & 3D TORUS KNOT ANIMATION ==========
     document.getElementById('year').textContent=new Date().getFullYear();
     
     const loaderBarInner = document.getElementById('loaderBarInner');
     const loaderMsg = document.getElementById('loaderMsg');
     const loader = document.getElementById('loader');
+    const loaderCanvas = document.getElementById('loader-canvas');
+
+    let loadProgress = 0;
+
+    // Canvas 3D Torus Knot wireframe generator and renderer
+    if (loaderCanvas) {
+        const ctx = loaderCanvas.getContext('2d');
+        const cx = loaderCanvas.width / 2;
+        const cy = loaderCanvas.height / 2;
+        
+        // Torus knot parameters (p=2, q=3)
+        const p = 2;
+        const q = 3;
+        const radius = 38;
+        const tubeRadius = 15;
+        const radialSteps = 80;
+        const tubularSteps = 8;
+        
+        // Generate vertices
+        const knotGrid = [];
+        for (let i = 0; i < radialSteps; i++) {
+            const theta = (i / radialSteps) * Math.PI * 2;
+            
+            // Core curve point
+            const r_core = radius + tubeRadius * Math.cos(q * theta);
+            const x_core = r_core * Math.cos(p * theta);
+            const y_core = r_core * Math.sin(p * theta);
+            const z_core = tubeRadius * Math.sin(q * theta);
+            
+            // Tangent estimation
+            const theta_next = theta + 0.01;
+            const r_next = radius + tubeRadius * Math.cos(q * theta_next);
+            const x_next = r_next * Math.cos(p * theta_next);
+            const y_next = r_next * Math.sin(p * theta_next);
+            const z_next = tubeRadius * Math.sin(q * theta_next);
+            
+            let tx = x_next - x_core;
+            let ty = y_next - y_core;
+            let tz = z_next - z_core;
+            const t_len = Math.sqrt(tx*tx + ty*ty + tz*tz);
+            tx /= t_len; ty /= t_len; tz /= t_len;
+            
+            // Normal
+            let nx = -ty;
+            let ny = tx;
+            let nz = 0;
+            let n_len = Math.sqrt(nx*nx + ny*ny);
+            if (n_len < 0.001) {
+                nx = 0; ny = -tz; nz = ty;
+                n_len = Math.sqrt(ny*ny + nz*nz);
+            }
+            nx /= n_len; ny /= n_len; nz /= n_len;
+            
+            // Binormal
+            const bx = ty * nz - tz * ny;
+            const by = tz * nx - tx * nz;
+            const bz = tx * ny - ty * nx;
+            
+            const ring = [];
+            for (let j = 0; j < tubularSteps; j++) {
+                const phi = (j / tubularSteps) * Math.PI * 2;
+                const cosPhi = Math.cos(phi);
+                const sinPhi = Math.sin(phi);
+                
+                // Point on tube surface
+                const px = x_core + tubeRadius * 0.45 * (cosPhi * nx + sinPhi * bx);
+                const py = y_core + tubeRadius * 0.45 * (cosPhi * ny + sinPhi * by);
+                const pz = z_core + tubeRadius * 0.45 * (cosPhi * nz + sinPhi * bz);
+                ring.push({ x: px, y: py, z: pz });
+            }
+            knotGrid.push(ring);
+        }
+        
+        let rotAngle = 0;
+        
+        function drawLoaderKnot() {
+            ctx.clearRect(0, 0, loaderCanvas.width, loaderCanvas.height);
+            
+            const rotX = rotAngle * 0.7;
+            const rotY = rotAngle * 1.1;
+            const rotZ = rotAngle * 0.4;
+            
+            // Precompute rotated coordinates
+            const rotatedGrid = [];
+            let minY = Infinity, maxY = -Infinity;
+            
+            for (let i = 0; i < radialSteps; i++) {
+                const rotatedRing = [];
+                for (let j = 0; j < tubularSteps; j++) {
+                    const pt = knotGrid[i][j];
+                    
+                    // Rotate Y
+                    let x1 = pt.x * Math.cos(rotY) - pt.z * Math.sin(rotY);
+                    let z1 = pt.x * Math.sin(rotY) + pt.z * Math.cos(rotY);
+                    
+                    // Rotate X
+                    let y2 = pt.y * Math.cos(rotX) - z1 * Math.sin(rotX);
+                    let z2 = pt.y * Math.sin(rotX) + z1 * Math.cos(rotX);
+                    
+                    // Rotate Z
+                    let x3 = x1 * Math.cos(rotZ) - y2 * Math.sin(rotZ);
+                    let y3 = x1 * Math.sin(rotZ) + y2 * Math.cos(rotZ);
+                    
+                    rotatedRing.push({ rx: x3, ry: y3, rz: z2 });
+                    if (y3 < minY) minY = y3;
+                    if (y3 > maxY) maxY = y3;
+                }
+                rotatedGrid.push(rotatedRing);
+            }
+            
+            const fillThreshold = maxY - (maxY - minY) * (loadProgress / 100);
+            
+            // Draw lines
+            ctx.lineWidth = 1.0;
+            const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--green').trim() || '#00ff88';
+            
+            for (let i = 0; i < radialSteps; i++) {
+                const nextI = (i + 1) % radialSteps;
+                for (let j = 0; j < tubularSteps; j++) {
+                    const nextJ = (j + 1) % tubularSteps;
+                    
+                    const p1 = rotatedGrid[i][j];
+                    const p2 = rotatedGrid[nextI][j];
+                    const p3 = rotatedGrid[i][nextJ];
+                    
+                    drawLine(p1, p2, fillThreshold, themeColor);
+                    drawLine(p1, p3, fillThreshold, themeColor);
+                }
+            }
+            
+            function drawLine(a, b, threshold, activeColor) {
+                const d = 160;
+                const scaleA = d / (d + a.rz);
+                const scaleB = d / (d + b.rz);
+                
+                const ax = cx + a.rx * scaleA * 1.5;
+                const ay = cy + a.ry * scaleA * 1.5;
+                const bx = cx + b.rx * scaleB * 1.5;
+                const by = cy + b.ry * scaleB * 1.5;
+                
+                const avgY = (a.ry + b.ry) / 2;
+                ctx.beginPath();
+                ctx.moveTo(ax, ay);
+                ctx.lineTo(bx, by);
+                
+                if (avgY > threshold) {
+                    ctx.strokeStyle = activeColor;
+                    ctx.globalAlpha = 0.85;
+                } else {
+                    ctx.strokeStyle = activeColor;
+                    ctx.globalAlpha = 0.08;
+                }
+                ctx.stroke();
+            }
+            
+            rotAngle += 0.015;
+            if (loadProgress < 100 || (loader && !loader.classList.contains('done'))) {
+                requestAnimationFrame(drawLoaderKnot);
+            }
+        }
+        requestAnimationFrame(drawLoaderKnot);
+    }
 
     const bootMessages = [
         "ESTABLISHING ENCRYPTED CHANNEL...",
@@ -2700,6 +2744,7 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
     let bootStep = 0;
     function runBootLoader() {
         if (!loaderBarInner || !loaderMsg) {
+            loadProgress = 100;
             setTimeout(() => { 
                 if(loader) loader.classList.add('done'); 
                 document.documentElement.classList.remove('loading');
@@ -2712,12 +2757,13 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
         
         if (bootStep < bootMessages.length) {
             const progress = Math.round(((bootStep + 1) / bootMessages.length) * 100);
+            loadProgress = progress;
             loaderBarInner.style.width = progress + '%';
-            loader.style.setProperty('--load-progress', progress + '%');
             loaderMsg.textContent = bootMessages[bootStep];
             bootStep++;
             setTimeout(runBootLoader, 400 + Math.random() * 300);
         } else {
+            loadProgress = 100;
             loaderMsg.textContent = "SESSION INITIALIZED.";
             setTimeout(() => {
                 loader.classList.add('done');
@@ -2784,14 +2830,7 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
         }
     })();
 
-    // ========== COMMAND CENTER TAB SWITCHER ==========
-    window.switchCCTab = function(tab) {
-        document.querySelectorAll('.cc-tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.cc-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById('cc-tab-' + tab).classList.add('active');
-        document.getElementById('cc-panel-' + tab).classList.add('active');
-        if (tab === 'map') initThreatMap();
-    };
+
 
     // ========== CTF LAUNCH FROM VISUAL BOARD ==========
     window.launchCTF = function(challengeId) {
@@ -2812,228 +2851,7 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
         }, 800);
     };
 
-    // ========== LIVE THREAT MAP ENGINE ==========
-    let threatMapStarted = false;
-    let threatMapInterval = null;
-    function initThreatMap() {
-        if (threatMapStarted) return;
-        threatMapStarted = true;
-        const canvas = document.getElementById('threat-map-canvas');
-        if (!canvas) return;
-        const container = canvas.parentElement;
-        canvas.width = container.clientWidth || 800;
-        canvas.height = 420;
-        const ctx = canvas.getContext('2d');
 
-        const nodes = [
-            { id: 'us-e', label: 'US-East', x: 0.20, y: 0.35, color: '#00ff88' },
-            { id: 'us-w', label: 'US-West', x: 0.10, y: 0.30, color: '#00ff88' },
-            { id: 'eu',   label: 'EU-Central', x: 0.48, y: 0.22, color: '#00d4ff' },
-            { id: 'ru',   label: 'RU', x: 0.60, y: 0.18, color: '#ef4444' },
-            { id: 'cn',   label: 'CN', x: 0.76, y: 0.30, color: '#ef4444' },
-            { id: 'lk',   label: '🏠 LK [HOST]', x: 0.70, y: 0.50, color: '#00ff88', isHost: true },
-            { id: 'in',   label: 'IN', x: 0.66, y: 0.44, color: '#f59e0b' },
-            { id: 'au',   label: 'AU-East', x: 0.82, y: 0.68, color: '#00d4ff' },
-            { id: 'br',   label: 'BR', x: 0.28, y: 0.62, color: '#ef4444' },
-            { id: 'jp',   label: 'JP', x: 0.85, y: 0.30, color: '#00d4ff' },
-            { id: 'de',   label: 'DE', x: 0.47, y: 0.25, color: '#00d4ff' },
-        ];
-
-        const attackTypes = ['SQLi', 'XSS', 'DDoS', 'RCE', 'BruteForce', 'C2', 'Phishing', 'Ransomware'];
-        const arcs = [];
-        let blockedTotal = Math.floor(Math.random() * 8000) + 24000;
-        let apm = 0;
-        let elapsedSeconds = 0;
-        const topThreats = {};
-        const threatLog = document.getElementById('threat-log');
-        const statApm = document.getElementById('stat-apm');
-        const statBlocked = document.getElementById('stat-blocked');
-        const statUptime = document.getElementById('stat-uptime');
-        const defconEl = document.getElementById('defcon-level');
-        const topThreatsEl = document.getElementById('top-threats');
-
-        function spawnArc() {
-            const hostNode = nodes.find(n => n.isHost);
-            const attackers = nodes.filter(n => n.color === '#ef4444' || n.id === 'cn' || n.id === 'ru' || n.id === 'br');
-            if (attackers.length === 0 || !hostNode) return;
-            const src = attackers[Math.floor(Math.random() * attackers.length)];
-            const type = attackTypes[Math.floor(Math.random() * attackTypes.length)];
-            const blocked = Math.random() > 0.15;
-            arcs.push({
-                src, dst: hostNode, type, blocked,
-                progress: 0, speed: 0.004 + Math.random() * 0.006,
-                color: blocked ? '#ef4444' : '#ff0000',
-                particles: []
-            });
-            blockedTotal += blocked ? 1 : 0;
-            apm++;
-            topThreats[src.id] = (topThreats[src.id] || 0) + 1;
-
-            if (threatLog) {
-                const now = new Date();
-                const ts = now.toTimeString().substring(0,8);
-                const srcIp = `${Math.floor(Math.random()*200)+10}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
-                const entry = document.createElement('div');
-                entry.className = 'tlog-entry';
-                entry.innerHTML = `<span class="tlog-ts">[${ts}]</span> <span class="tlog-src">${src.label}(${srcIp})</span> → <span class="tlog-dst">LK[HOST]</span> <span class="tlog-type">${type}</span> <span class="tlog-block">[${blocked ? 'BLOCKED' : 'ALERT'}]</span>`;
-                threatLog.prepend(entry);
-                if (threatLog.children.length > 40) threatLog.removeChild(threatLog.lastChild);
-            }
-        }
-
-        function drawMap() {
-            const W = canvas.width, H = canvas.height;
-            ctx.clearRect(0, 0, W, H);
-
-            // Background grid
-            ctx.strokeStyle = 'rgba(0,212,255,0.04)';
-            ctx.lineWidth = 1;
-            for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
-            for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
-
-            // Continent outlines
-            ctx.strokeStyle = 'rgba(0,212,255,0.08)';
-            ctx.lineWidth = 1.5;
-            ctx.fillStyle = 'rgba(0,212,255,0.02)';
-            // North America
-            ctx.beginPath(); ctx.moveTo(W*0.05,H*0.15); ctx.lineTo(W*0.30,H*0.12); ctx.lineTo(W*0.32,H*0.55); ctx.lineTo(W*0.18,H*0.55); ctx.lineTo(W*0.05,H*0.45); ctx.closePath(); ctx.fill(); ctx.stroke();
-            // Europe
-            ctx.beginPath(); ctx.moveTo(W*0.43,H*0.12); ctx.lineTo(W*0.56,H*0.10); ctx.lineTo(W*0.58,H*0.38); ctx.lineTo(W*0.43,H*0.40); ctx.closePath(); ctx.fill(); ctx.stroke();
-            // Asia
-            ctx.beginPath(); ctx.moveTo(W*0.56,H*0.10); ctx.lineTo(W*0.90,H*0.08); ctx.lineTo(W*0.92,H*0.55); ctx.lineTo(W*0.60,H*0.58); ctx.lineTo(W*0.58,H*0.38); ctx.closePath(); ctx.fill(); ctx.stroke();
-            // Africa
-            ctx.beginPath(); ctx.moveTo(W*0.43,H*0.40); ctx.lineTo(W*0.56,H*0.38); ctx.lineTo(W*0.54,H*0.78); ctx.lineTo(W*0.44,H*0.80); ctx.closePath(); ctx.fill(); ctx.stroke();
-            // South America
-            ctx.beginPath(); ctx.moveTo(W*0.20,H*0.58); ctx.lineTo(W*0.32,H*0.55); ctx.lineTo(W*0.30,H*0.85); ctx.lineTo(W*0.19,H*0.88); ctx.closePath(); ctx.fill(); ctx.stroke();
-            // Australia
-            ctx.beginPath(); ctx.moveTo(W*0.74,H*0.60); ctx.lineTo(W*0.92,H*0.57); ctx.lineTo(W*0.93,H*0.80); ctx.lineTo(W*0.74,H*0.82); ctx.closePath(); ctx.fill(); ctx.stroke();
-
-            // Draw arcs
-            for (let i = arcs.length - 1; i >= 0; i--) {
-                const arc = arcs[i];
-                arc.progress += arc.speed;
-                const sx = arc.src.x * W, sy = arc.src.y * H;
-                const dx = arc.dst.x * W, dy = arc.dst.y * H;
-                const cpx = (sx + dx) / 2, cpy = Math.min(sy, dy) - 80;
-                const t = arc.progress;
-                const bx = (1-t)*(1-t)*sx + 2*(1-t)*t*cpx + t*t*dx;
-                const by = (1-t)*(1-t)*sy + 2*(1-t)*t*cpy + t*t*dy;
-
-                // Trail
-                ctx.beginPath();
-                ctx.moveTo(sx, sy);
-                ctx.quadraticCurveTo(cpx, cpy, bx, by);
-                ctx.strokeStyle = arc.blocked ? 'rgba(239,68,68,0.3)' : 'rgba(255,0,0,0.5)';
-                ctx.lineWidth = 1.2;
-                ctx.stroke();
-
-                // Bullet
-                ctx.beginPath();
-                ctx.arc(bx, by, 4, 0, Math.PI * 2);
-                ctx.fillStyle = arc.blocked ? '#ef4444' : '#ff4444';
-                ctx.shadowBlur = 8;
-                ctx.shadowColor = arc.blocked ? '#ef4444' : '#ff0000';
-                ctx.fill();
-                ctx.shadowBlur = 0;
-
-                if (arc.progress >= 1) {
-                    // Impact flash
-                    ctx.beginPath();
-                    ctx.arc(dx, dy, 12, 0, Math.PI * 2);
-                    ctx.fillStyle = arc.blocked ? 'rgba(239,68,68,0.3)' : 'rgba(0,255,136,0.3)';
-                    ctx.fill();
-                    arcs.splice(i, 1);
-                }
-            }
-
-            // Draw nodes
-            nodes.forEach(node => {
-                const nx = node.x * W, ny = node.y * H;
-                const isHost = node.isHost;
-                const radius = isHost ? 8 : 5;
-
-                // Pulse ring for host
-                if (isHost) {
-                    ctx.beginPath();
-                    ctx.arc(nx, ny, radius + 6 + Math.sin(Date.now() / 500) * 3, 0, Math.PI * 2);
-                    ctx.strokeStyle = 'rgba(0,255,136,0.2)';
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                }
-
-                ctx.beginPath();
-                ctx.arc(nx, ny, radius, 0, Math.PI * 2);
-                ctx.fillStyle = node.color;
-                ctx.shadowBlur = isHost ? 16 : 8;
-                ctx.shadowColor = node.color;
-                ctx.fill();
-                ctx.shadowBlur = 0;
-
-                ctx.font = isHost ? 'bold 9px JetBrains Mono, monospace' : '8px JetBrains Mono, monospace';
-                ctx.fillStyle = node.color;
-                ctx.fillText(node.label, nx + radius + 3, ny + 3);
-            });
-        }
-
-        // Update stats every second
-        let uptimeSecs = 0;
-        const statsInterval = setInterval(() => {
-            uptimeSecs++;
-            const hh = String(Math.floor(uptimeSecs / 3600)).padStart(2,'0');
-            const mm = String(Math.floor((uptimeSecs % 3600) / 60)).padStart(2,'0');
-            const ss = String(uptimeSecs % 60).padStart(2,'0');
-            if (statUptime) statUptime.textContent = `${hh}:${mm}:${ss}`;
-            if (statBlocked) statBlocked.textContent = (blockedTotal + uptimeSecs * 3).toLocaleString();
-            if (statApm) { statApm.textContent = apm; apm = 0; }
-
-            // Update defcon
-            if (defconEl) {
-                const level = blockedTotal % 7 < 2 ? 3 : blockedTotal % 5 < 2 ? 4 : 5;
-                defconEl.textContent = level;
-                defconEl.style.color = level <= 3 ? '#ef4444' : level === 4 ? '#f59e0b' : '#00ff88';
-            }
-
-            // Top threats
-            if (topThreatsEl) {
-                const sorted = Object.entries(topThreats).sort((a,b) => b[1]-a[1]).slice(0,3);
-                topThreatsEl.innerHTML = sorted.map(([id, count]) => {
-                    const node = nodes.find(n => n.id === id);
-                    return `<div style="font-family:var(--mono);font-size:0.58rem;display:flex;justify-content:space-between;"><span style="color:${node ? node.color : '#fff'}">${node ? node.label : id}</span><span style="color:var(--text-muted)">${count} hits</span></div>`;
-                }).join('');
-            }
-        }, 1000);
-
-        // Spawn arcs
-        function scheduleArc() {
-            spawnArc();
-            setTimeout(scheduleArc, 800 + Math.random() * 1200);
-        }
-        scheduleArc();
-
-        // Render loop
-        function renderLoop() {
-            drawMap();
-            requestAnimationFrame(renderLoop);
-        }
-        renderLoop();
-
-        // Cleanup on section hide
-        threatMapInterval = statsInterval;
-    }
-
-    // Auto-init threat map when command center section becomes visible
-    const ccObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const activePanel = document.querySelector('.cc-panel.active');
-                if (activePanel && activePanel.id === 'cc-panel-map') {
-                    initThreatMap();
-                }
-            }
-        });
-    }, { threshold: 0.3 });
-    const ccSection = document.getElementById('command-center');
-    if (ccSection) ccObserver.observe(ccSection);
 
     // ========== CTF PLATFORM ENGINE ==========
     const CTF_CHALLENGES = {
