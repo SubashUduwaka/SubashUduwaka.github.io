@@ -249,8 +249,8 @@
             transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
         }
         #loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loader-wireframe-container { width: 160px; height: 160px; margin-bottom: 2rem; display: flex; align-items: center; justify-content: center; }
-        #loader-canvas { width: 160px; height: 160px; display: block; filter: drop-shadow(0 0 8px var(--green-glow)); }
+        .loader-wireframe-container { width: 200px; height: 200px; margin-bottom: 2rem; display: flex; align-items: center; justify-content: center; }
+        #loader-canvas { width: 200px; height: 200px; display: block; filter: drop-shadow(0 0 12px var(--green-glow)); }
         .loader-logo { font-family: var(--mono); font-size: 2.2rem; font-weight: 700; color: var(--green); margin-bottom: 1.5rem; letter-spacing: 3px; text-shadow: 0 0 10px var(--green-glow); }
         .loader-bar { width: 250px; height: 3px; background: var(--border); border-radius: 3px; overflow: hidden; }
         .loader-bar-inner { height: 100%; width: 0%; background: var(--green); border-radius: 3px; transition: width 0.3s ease; box-shadow: 0 0 8px var(--green-glow); }
@@ -453,8 +453,9 @@
         .terminal-title { font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); margin-left: 0.75rem; }
         .terminal-body {
             padding: 1.2rem; font-family: var(--mono); font-size: 0.8rem;
-            min-height: 300px; max-height: 400px; overflow-y: auto; line-height: 1.8;
+            min-height: auto; max-height: 400px; overflow-y: auto; line-height: 1.8;
             color: var(--terminal-text);
+            display: flex; flex-direction: column; gap: 0.2rem;
         }
         .terminal-body::-webkit-scrollbar { width: 4px; }
         .terminal-body::-webkit-scrollbar-thumb { background: var(--green-muted); border-radius: 4px; }
@@ -648,6 +649,9 @@
             .nav-menu.open { right: 0; }
             .nav-menu a { padding: 0.7rem 1rem; border-radius: 8px; font-size: 0.85rem; }
             .nav-burger { display: flex; }
+            .hero-inner { text-align: center; }
+            .hero-actions { justify-content: center; }
+            .hero-social { justify-content: center; }
             .about-layout { grid-template-columns: 1fr; text-align: center; }
             .about-photo { max-width: 220px; margin: 0 auto; }
             .stats-row { grid-template-columns: repeat(2, 1fr); }
@@ -657,8 +661,6 @@
         }
         @media (max-width: 480px) {
             .hero-name { font-size: 2.5rem; }
-            .hero-actions { justify-content: center; }
-            .hero-inner { text-align: center; }
             .hero-terminal { font-size: 0.85rem; }
             .hero-bio { font-size: 0.95rem; }
             .terminal-body { padding: 0.8rem; }
@@ -795,7 +797,7 @@
     <!-- Loader -->
     <div id="loader">
         <div class="loader-wireframe-container">
-            <canvas id="loader-canvas" width="160" height="160"></canvas>
+            <canvas id="loader-canvas" width="200" height="200"></canvas>
         </div>
         <div class="loader-logo">SUBASH://</div>
         <div class="loader-bar"><div class="loader-bar-inner" id="loaderBarInner"></div></div>
@@ -922,9 +924,6 @@
                         </span></div>
                         <div class="term-line"><span class="term-output green">Welcome to Subash's Interactive Portfolio Terminal v2.0</span></div>
                         <div class="term-line"><span class="term-output">Type <span style="color:var(--cyan)">help</span> to see available commands.</span></div>
-                        <div class="term-line">&nbsp;</div>
-                    </div>
-                    <div style="padding: 0 1.2rem 0.8rem;">
                         <div class="terminal-input-line">
                             <span class="terminal-input-prompt">visitor@subash:~$ </span>
                             <input type="text" id="terminal-input" autocomplete="off" spellcheck="false">
@@ -1811,7 +1810,9 @@
             if (termBody) {
                 const line = document.createElement('div'); line.className = 'term-line';
                 line.innerHTML = `<span class="term-prompt">system@subash:~$ </span><span class="term-output green">cd ~ && clear [REROUTED TO APEX]</span>`;
-                termBody.appendChild(line);
+                const inputLine = termBody.querySelector('.terminal-input-line');
+                if (inputLine) termBody.insertBefore(line, inputLine);
+                else termBody.appendChild(line);
                 termBody.scrollTop = termBody.scrollHeight;
             }
         });
@@ -2017,6 +2018,16 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
     // ========== INTERACTIVE TERMINAL ==========
     const termBody=document.getElementById('terminalBody');
     const termInput=document.getElementById('terminal-input');
+
+    function appendTerminalElement(el) {
+        const inputLine = termBody.querySelector('.terminal-input-line');
+        if (inputLine) {
+            termBody.insertBefore(el, inputLine);
+        } else {
+            termBody.appendChild(el);
+        }
+        termBody.scrollTop = termBody.scrollHeight;
+    }
     const commands={
         help:()=>[
             {t:'green',v:'Available commands:'},
@@ -2222,10 +2233,10 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
         lines.forEach(line => {
             const div = document.createElement('div'); div.className = 'term-line';
             div.innerHTML = `<span class="term-output ${line.t}">${line.v}</span>`;
-            termBody.appendChild(div);
+            appendTerminalElement(div);
         });
-        const spacer = document.createElement('div'); spacer.className = 'term-line'; spacer.innerHTML = '&nbsp;'; termBody.appendChild(spacer);
-        termBody.scrollTop = termBody.scrollHeight;
+        const spacer = document.createElement('div'); spacer.className = 'term-line'; spacer.innerHTML = '&nbsp;';
+        appendTerminalElement(spacer);
     }
 
     function handleAiAuditInput(cmd) {
@@ -2368,9 +2379,17 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
         // Echo command
         const echoLine=document.createElement('div');echoLine.className='term-line';
         echoLine.innerHTML=`<span class="term-prompt">visitor@subash:~$ </span><span class="term-cmd">${rawInput}</span>`;
-        termBody.appendChild(echoLine);
+        appendTerminalElement(echoLine);
 
-        if(cmd==='clear'){termBody.innerHTML='';currentTerminalMode='normal';systemState='secure';return;}
+        if (cmd === 'clear') {
+            const inputLine = termBody.querySelector('.terminal-input-line');
+            termBody.innerHTML = '';
+            if (inputLine) termBody.appendChild(inputLine);
+            currentTerminalMode = 'normal';
+            systemState = 'secure';
+            termInput.focus();
+            return;
+        }
         if(cmd==='abort'||cmd==='exit') {
             printTerminalLines([{t:'amber',v:'Session aborted. Returning to normal console.'}]);
             currentTerminalMode='normal';
@@ -2389,11 +2408,11 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
             } else {
                 const div=document.createElement('div');div.className='term-line';
                 div.innerHTML=`<span class="term-output red">bash: ${cmd}: command not found. Type <span style="color:var(--cyan)">help</span> for available commands.</span>`;
-                termBody.appendChild(div);
-                const spacer=document.createElement('div');spacer.className='term-line';spacer.innerHTML='&nbsp;';termBody.appendChild(spacer);
+                appendTerminalElement(div);
+                const spacer=document.createElement('div');spacer.className='term-line';spacer.innerHTML='&nbsp;';
+                appendTerminalElement(spacer);
             }
         }
-        termBody.scrollTop=termBody.scrollHeight;
     });
 
     // Click-to-focus terminal input (only when not clicking action dots)
@@ -2576,16 +2595,21 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
 
     // Canvas 3D Torus Knot wireframe generator and renderer
     if (loaderCanvas) {
+        const dpr = window.devicePixelRatio || 1;
+        loaderCanvas.width = 200 * dpr;
+        loaderCanvas.height = 200 * dpr;
         const ctx = loaderCanvas.getContext('2d');
-        const cx = loaderCanvas.width / 2;
-        const cy = loaderCanvas.height / 2;
+        ctx.scale(dpr, dpr);
+        
+        const cx = 100;
+        const cy = 100;
         
         // Torus knot parameters (p=2, q=3)
         const p = 2;
         const q = 3;
-        const radius = 38;
-        const tubeRadius = 15;
-        const radialSteps = 80;
+        const radius = 46;
+        const tubeRadius = 17;
+        const radialSteps = 60;
         const tubularSteps = 8;
         
         // Generate vertices
@@ -2646,11 +2670,51 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
         let rotAngle = 0;
         
         function drawLoaderKnot() {
-            ctx.clearRect(0, 0, loaderCanvas.width, loaderCanvas.height);
+            ctx.clearRect(0, 0, 200, 200);
             
-            const rotX = rotAngle * 0.7;
-            const rotY = rotAngle * 1.1;
-            const rotZ = rotAngle * 0.4;
+            const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--green').trim() || '#00ff88';
+            
+            // Draw high-tech reticle scanner background
+            ctx.save();
+            ctx.strokeStyle = themeColor;
+            ctx.lineWidth = 1;
+            
+            // Rotating outer ring tick marks
+            ctx.translate(cx, cy);
+            ctx.rotate(rotAngle * -0.15);
+            ctx.globalAlpha = 0.04;
+            ctx.beginPath();
+            ctx.arc(0, 0, 90, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Ticks
+            ctx.beginPath();
+            for (let a = 0; a < Math.PI * 2; a += Math.PI / 8) {
+                ctx.moveTo(Math.cos(a) * 86, Math.sin(a) * 86);
+                ctx.lineTo(Math.cos(a) * 92, Math.sin(a) * 92);
+            }
+            ctx.stroke();
+            ctx.restore();
+            
+            // Static crosshairs & inner rings
+            ctx.save();
+            ctx.strokeStyle = themeColor;
+            ctx.lineWidth = 1;
+            ctx.globalAlpha = 0.03;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 68, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(cx - 78, cy); ctx.lineTo(cx - 62, cy);
+            ctx.moveTo(cx + 62, cy); ctx.lineTo(cx + 78, cy);
+            ctx.moveTo(cx, cy - 78); ctx.lineTo(cx - 62, cy);
+            ctx.moveTo(cx, cy + 62); ctx.lineTo(cx, cy + 78);
+            ctx.stroke();
+            ctx.restore();
+            
+            const rotX = rotAngle * 0.6;
+            const rotY = rotAngle * 1.0;
+            const rotZ = rotAngle * 0.35;
             
             // Precompute rotated coordinates
             const rotatedGrid = [];
@@ -2683,9 +2747,6 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
             const fillThreshold = maxY - (maxY - minY) * (loadProgress / 100);
             
             // Draw lines
-            ctx.lineWidth = 1.0;
-            const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--green').trim() || '#00ff88';
-            
             for (let i = 0; i < radialSteps; i++) {
                 const nextI = (i + 1) % radialSteps;
                 for (let j = 0; j < tubularSteps; j++) {
@@ -2701,29 +2762,63 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
             }
             
             function drawLine(a, b, threshold, activeColor) {
-                const d = 160;
+                const d = 180;
                 const scaleA = d / (d + a.rz);
                 const scaleB = d / (d + b.rz);
                 
-                const ax = cx + a.rx * scaleA * 1.5;
-                const ay = cy + a.ry * scaleA * 1.5;
-                const bx = cx + b.rx * scaleB * 1.5;
-                const by = cy + b.ry * scaleB * 1.5;
+                // Scale factor adjusted from 1.4 to 0.85 to fit perfectly within reticle and canvas boundaries
+                const ax = cx + a.rx * scaleA * 0.85;
+                const ay = cy + a.ry * scaleA * 0.85;
+                const bx = cx + b.rx * scaleB * 0.85;
+                const by = cy + b.ry * scaleB * 0.85;
                 
                 const avgY = (a.ry + b.ry) / 2;
+                const avgZ = (a.rz + b.rz) / 2;
+                
+                // Depth cue factor: maps avgZ from [-55, 55] to [1.0, 0.0]
+                const depthFactor = Math.max(0, Math.min(1, (55 - avgZ) / 110));
+                
                 ctx.beginPath();
                 ctx.moveTo(ax, ay);
                 ctx.lineTo(bx, by);
                 
+                ctx.save();
+                ctx.strokeStyle = activeColor;
                 if (avgY > threshold) {
-                    ctx.strokeStyle = activeColor;
-                    ctx.globalAlpha = 0.85;
+                    // Filled / Active section
+                    ctx.lineWidth = 0.85 + 1.15 * depthFactor;
+                    ctx.globalAlpha = 0.15 + 0.75 * depthFactor;
                 } else {
-                    ctx.strokeStyle = activeColor;
-                    ctx.globalAlpha = 0.08;
+                    // Unfilled / Background section
+                    ctx.lineWidth = 0.4 + 0.4 * depthFactor;
+                    ctx.globalAlpha = 0.02 + 0.12 * depthFactor;
                 }
                 ctx.stroke();
+                ctx.restore();
             }
+            
+            // Draw horizontal laser scanner sweep line
+            const scanY = cy + Math.sin(rotAngle * 1.5) * 65;
+            ctx.save();
+            ctx.strokeStyle = themeColor;
+            ctx.lineWidth = 1.5;
+            ctx.globalAlpha = 0.18;
+            ctx.shadowColor = themeColor;
+            ctx.shadowBlur = 6;
+            ctx.beginPath();
+            ctx.moveTo(cx - 72, scanY);
+            ctx.lineTo(cx + 72, scanY);
+            ctx.stroke();
+            
+            // Add a horizontal scanning glow gradient
+            const grad = ctx.createLinearGradient(0, scanY - 8, 0, scanY + 8);
+            grad.addColorStop(0, 'transparent');
+            grad.addColorStop(0.5, themeColor);
+            grad.addColorStop(1, 'transparent');
+            ctx.fillStyle = grad;
+            ctx.globalAlpha = 0.05;
+            ctx.fillRect(cx - 72, scanY - 8, 144, 16);
+            ctx.restore();
             
             rotAngle += 0.015;
             if (loadProgress < 100 || (loader && !loader.classList.contains('done'))) {
@@ -3043,7 +3138,7 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
                 // echo
                 const echoLine = document.createElement('div'); echoLine.className = 'term-line';
                 echoLine.innerHTML = `<span class="term-prompt">visitor@subash:~$ </span><span class="term-cmd">${rawInput}</span>`;
-                document.getElementById('terminalBody')?.appendChild(echoLine);
+                appendTerminalElement(echoLine);
                 return;
             }
 
@@ -3063,7 +3158,7 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
                 ctfTermInput.value = '';
                 const echoLine = document.createElement('div'); echoLine.className = 'term-line';
                 echoLine.innerHTML = `<span class="term-prompt">visitor@subash:~$ </span><span class="term-cmd">${rawInput}</span>`;
-                document.getElementById('terminalBody')?.appendChild(echoLine);
+                appendTerminalElement(echoLine);
                 return;
             }
 
@@ -3090,7 +3185,7 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
                 ctfTermInput.value = '';
                 const echoLine = document.createElement('div'); echoLine.className = 'term-line';
                 echoLine.innerHTML = `<span class="term-prompt">visitor@subash:~$ </span><span class="term-cmd">${rawInput}</span>`;
-                document.getElementById('terminalBody')?.appendChild(echoLine);
+                appendTerminalElement(echoLine);
                 return;
             }
 
@@ -3131,7 +3226,7 @@ Identity & Access Management (IAM) and Access Control Lists (ACLs) are primary s
                 ctfTermInput.value = '';
                 const echoLine = document.createElement('div'); echoLine.className = 'term-line';
                 echoLine.innerHTML = `<span class="term-prompt">visitor@subash:~$ </span><span class="term-cmd">${rawInput}</span>`;
-                document.getElementById('terminalBody')?.appendChild(echoLine);
+                appendTerminalElement(echoLine);
                 return;
             }
         }, true); // capture=true runs before main handler
